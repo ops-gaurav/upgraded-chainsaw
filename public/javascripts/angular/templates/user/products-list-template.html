@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class='panel-heading'>
+        <h4>{{pageTitle}}</h4>
+    </div>
+    <div class="panel-body">
+        <table class='table table-striped'>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Name</td>
+                    <td>Price</td>
+                    <td>Category</td>
+                    <td>Buy now</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat='product in products'>
+                    <td><img src='/images/product.png' width=40/></td>
+                    <td>{{product.name}}</td>
+                    <td>{{product.price | currency:"&#8377;"}}</td>
+                    <td>{{product.category}}</td>
+                    <td><button class='btn btn-default btn-sm' ng-click='buyItem(product._id)'>Buy now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

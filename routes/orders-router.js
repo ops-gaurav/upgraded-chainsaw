@@ -27,7 +27,7 @@ router.post ('/add/:productId', (req, res) => {
                 else if (data) {
                     // product is a valid product
                     var order = new Order ({
-                        _user: req.session.user._id,
+                        _user: req.user.doc._id,
                         _product: req.params.productId,
                         time: new Date().getTime()
                     });
@@ -48,11 +48,9 @@ router.get ('/myorders', (req, res) => {
         mongoose.Promise = es6Promise;
         mongoose.connect (config.host, config.db);
 
-        Order.find ({_user: req.session.user._id}, (err, data) => {
-            if (err) res.send ({status: 'error', message: 'server error :'+ err});
-            else if (data && data.length > 0) {
-                res.send ({status: 'success', data: data});
-            } else res.send ({status: 'error', message: 'no data'});
+        Order.find ({_user: req.user.doc._id}).populate ('_product', 'name price').exec ((err, data) => {
+            if (err) res.send ({status: 'error', message: err});
+            else res.send ({status: 'success', data: data});
 
             mongoose.disconnect ();
         });

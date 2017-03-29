@@ -21,6 +21,8 @@ var upload = multer ({storage: storage}).single ('avatar');
 
 router.get ('/all', (req, res) => {
 	if (req.isAuthenticated ()) {
+        mongoose.Promise = es6Promise;
+        mongoose.connect (config.host, config.db);
 		Product.find ({}, (err, docs) => {
 			if (err) 
 				res.send ({status: 'error', message: 'some server error'});
@@ -30,6 +32,7 @@ router.get ('/all', (req, res) => {
 				else
 					res.send ({status:'error', message: 'no data'});
 			}
+            mongoose.disconnect ();
 		});
 	} else res.send ({status: 'error', message: 'Login first'});
 });

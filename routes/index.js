@@ -15,4 +15,11 @@ router.get ('/admin', (req, res) => {
   } else res.render ('error', {message: 'Unauthorized access'});
 });
 
+router.get ('/user', (req, res) => {
+  if (req.isAuthenticated ()  && req.user.doc.type == 'user')
+    res.sendFile (resolver.htmlResolver.resolve ('user.html'));
+  else
+    res.render ('error', {message: 'Unauthorized access'});
+})
+
 export default router;

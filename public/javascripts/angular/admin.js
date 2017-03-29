@@ -38,11 +38,17 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 
 app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http){
 	// load all the orders here
+
+	$scope.orders = [];
+
 	$http.get ('/order/multiPopulate').then (function (data) {
 		var response = data.data;
 		$scope.orders = response;
+
+		//$rootScope.fetchUsers();
 	}, function (data) {
 		console.log ('ERROR: '+ JSON.stringify (data));
+		// $rootScope.fetchUsers();
 	});
 
 	$scope.title = 'All Orders';
@@ -56,15 +62,27 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
 app.controller ('UsersListController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
 	// load alll the users here
 	$scope.title = 'All users';
-	$http.get ('/user/all').then (function (data) {
-		if (data.data.status =='success') {
-			$scope.users = data.data.message;
-			console.log ($scope.users);
-		} else
-			console.log (data.data.message);
-	}, function (data) {
-		console.error (JSON.stringify (data));
-	});
+
+	$scope.users = []
+	// call one after another
+	// call after all the orders have been loaded
+	$rootScope.fetchUsers = function () {
+		console.log ('fetching users');
+		$http.get ('/user/all').then (function (data) {
+			if (data.data.status =='success') {
+				$scope.users = data.data.message;
+				console.log ($scope.users);
+			} else
+				console.log (data.data.message);
+
+			$rootScope.fetchProducts();
+		}, function (data) {
+			console.error (JSON.stringify (data));
+			$rootScope.fetchProducts();
+		});
+	}
+
+	$rootScope.fetchUsers();
 
 	$scope.showNewUserModal = function() {
 		$('#new-user-modal').modal();
@@ -86,11 +104,12 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upload', function ($scope, $rootScope, $http, Upload) {
 	$scope.title = 'All products';
 
+	$scope.products = [];
 	$scope.newProductModal = function () {
 		$('#new-product-modal').modal ();
 	}
 
-	$scope.fetchProducts = function () {
+	$rootScope.fetchProducts = function () {
 		console.log ('fetching products');
 		$http.get ('/product/all').then (function(d){
 			if (d.data.status == 'success') {
@@ -107,7 +126,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 		});
 	}
 
-	$scope.fetchProducts();
+	//$scope.fetchProducts();
 
 	$scope.setImage = function (file, errFiles) {
 		$scope.file = file;
