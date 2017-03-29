@@ -69,6 +69,18 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 	$scope.showNewUserModal = function() {
 		$('#new-user-modal').modal();
 	}
+
+	$scope.createUser = function () {
+		$http.post ('/user/signup', {username: $scope.nUsername, password: $scope.nPassword, phone: $scope.nPhone, email: $scope.nEmail, type: $scope.nType}). then (function (d) {
+			if (d.data.status =='success') {
+				$scope.users.push (d.data.raw);
+				$('#new-user-modal').modal ('hide');
+			} else
+				console.log (d.data.message);
+		}, function (d) {
+			console.error (JSON.stringify(d));
+		});
+	}
 }]);
 
 app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upload', function ($scope, $rootScope, $http, Upload) {
@@ -79,6 +91,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 	}
 
 	$scope.fetchProducts = function () {
+		console.log ('fetching products');
 		$http.get ('/product/all').then (function(d){
 			if (d.data.status == 'success') {
 				$scope.products = d.data.data;
@@ -101,46 +114,16 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 	}
 
 	$scope.createProduct = function () {
-		Upload.upload ({
-			url: '/product/add',
-			method: 'POST',
-			data: {avatar: $scope.file}
-		}). then (function (resp) {
-			if (resp.data.status == 'success')
-				$scope.fetchProducts();
-			else
-				console.log (resp.data.message);
-		}, function (res) {
-			console.error (JSON.stringify (res));
+		$http.post ('/product/add', {name: $scope.pName, price: $scope.pPrice}).then (function (d) {
+			if (d.data.status == 'success') {
+				$('#new-product-modal').modal ('hide');
+				$scope.products.push (d.data.raw);
+			} else
+				console.log (d.data.message);
+		}, function (data) {
+			console.error ("ERROR: "+ JSON.stringify (data));
 		});
-		$http.post ('/product/add', {name: $scope.pName, price: $scope.pPrice});
 	}
-	// $scope.fileUpload= function (file, errFiles) {
-	// 	if (file) {
-	// 		$scope.file = file;
-	// 		var url= '/user/image';
-	// 		Upload.upload ({
-	// 			url: url,
-	// 			method: 'PUT',
-	// 			data: {avatar: file}
-	// 		}). then (function (resp){ // success
-	// 			// https://github.com/danialfarid/ng-file-upload
-	// 			var response = resp.data;
-	// 			if (response.status == 'success') {
-	// 				console.log ('uploaded');
-	// 				$('#user-img').attr ('src', '/user/image');
-	// 			} else {
-	// 				console.log ('some error '+ response.message);
-	// 			}
-				
-	// 		}, function (res) {
-	// 			//catch error
-	// 			console.log ('Error: '+ resp);
-	// 		}, function (event) {
-
-	// 		});
-	// 	}
-	// };
 }]);
 
 app.controller ('AdminController', ['$rootScope', '$http', '$window', '$state', function ($rootScope, $http, $window, $state) {

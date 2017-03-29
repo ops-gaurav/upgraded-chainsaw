@@ -90,4 +90,39 @@ router.post ('/auth', passport.authenticate ('PasswordAuth', {
 	res.send (sRes(req.user));
 })
 
+router.post ('/signup', (req, res) => {
+    let data = req.body;
+    console.log (data);
+    if (data.username && data.password && data.phone && data.email && data.type) {
+		mongoose.Promise = es6Promise;
+		mongoose.connect (config.host, config.db);
+		User.findOne ({username: data.username}, (err, doc) => {
+			if (err) {
+				res.send ({status: 'error', message: 'some error occurred: '+ err});
+				mongoose.disconnect ();
+			}
+			else if (doc) {
+				res.send ({status: 'error', message: 'username already exists'});
+				mongoose.disconnect ();
+			}
+			else {
+				var user = new User ({
+					username: data.username,
+					email: data.email,
+					password: data.password,
+					phone: data.phone,
+					type: data.type
+				});
+
+				user.save ().then (() => {
+					res.send ({status: 'success', message: 'User created successfully', raw: user});
+					mongoose.disconnect ();
+				});
+			}
+		})
+	} else {
+		res.send ({status: 'error', message: 'incomplete data'});
+	}
+});
+
 module.exports = router;

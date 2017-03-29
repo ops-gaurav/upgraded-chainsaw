@@ -51,50 +51,29 @@ router.get ('/get/:id', (req, res) => {
     });
 })
 router.post ('/add', (req, res) => {
-    upload (req, res, function (err) {
-        if (err) res.send ({status: 'error', message: 'error uploading'});
-        else if (req.body) {
-            mongoose.Promise = es6Promise;
-            mongoose.connect (config.host, config.db);
+    var data = req.body;
+    console.log (data);
+    if (req.isAuthenticated()) {
+        if (req.user.doc.type == 'admin') {
 
-            var product = new Product({
-                name: req.body.name,
-                price: req.body.price,
-                image: {
-                    mime: req.image.mimetype,
-                    value: fs.readFileSync ('tempUploads/'+ req.user.doc.username + '_avatar')
-                }
-            });
+            if (data.name && data.price) {
+                mongoose.promise = es6Promise;
+                mongoose.connect (config.host, config.db);
+                var product = new Product({
+                    name: req.body.name,
+                    price: req.body.price
+                });
 
-            product.save(). then (() => {
-                res.send ({status: 'success', message: 'product saved'});
-                mongoose.disconnect();
-            });
-        }else
-            res.send ({status: 'error', message: 'incomplete data'});
-    });
-    // var data = req.body;
-    // if (req.isAuthenticated()) {
-    //     if (req.user.doc.type == 'admin') {
-
-    //         if (req.body.name && req.body.price) {
-    //             mongoose.promise = es6Promise;
-    //             mongoose.connect (config.host, config.db);
-    //             var product = new Product({
-    //                 name: req.body.name,
-    //                 price: req.body.price
-    //             });
-
-    //             product.save().then (() => {
-    //                 res.send ({status: 'success', message: 'product saved'});
-    //                 mongoose.disconnect();
-    //             });
-    //         } else {
-    //             res.send ({status: 'error', message: 'Incomplete data'});
-    //         }
-    //     }
-    // } else
-    //     res.send ({status: 'error', message: 'login first'});
+                product.save().then (() => {
+                    res.send ({status: 'success', message: 'product saved', raw: product});
+                    mongoose.disconnect();
+                });
+            } else {
+                res.send ({status: 'error', message: 'Incomplete data'});
+            }
+        }
+    } else
+        res.send ({status: 'error', message: 'login first'});
 });
 
 router.put ('/update/:id', (req, res) => {
