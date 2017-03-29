@@ -1,0 +1,18 @@
+<section class='container custom-container'>
+    <section class='col-md-3'></section>
+    <section class='col-md-6'>
+        <form method="POST" role="form">
+            <legend>Login form</legend>
+
+            <div class="form-group">
+                <input type="text" ng-model='username' class="form-control" id="" placeholder="username" /> <br/>
+                <input type='password' ng-model='password' class='form-control' placeholder="password" />
+            </div>
+
+            <p class='text-center'><button ng-click='_processAuth()' type="submit" class="btn btn-primary btn-sm">LOGIN</button></p>
+            <p class="text-center">Not a member yet? <a href='/signup' class='btn btn-link'>Sign up</a></p>
+            <p class='error text-center' ng-show='auth_error' style='color: darkred' ng-bind='auth_error'></p>
+        </form>
+    </section>
+    <section class='col-md-6'></section>
+</section>

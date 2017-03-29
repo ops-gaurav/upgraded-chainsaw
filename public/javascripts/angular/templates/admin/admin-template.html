@@ -1,0 +1,16 @@
+<section class='container'>
+	<h2 class='page-header'>Hello {{sessionInfo.username}}, welcome to the admin area</h2>
+	<section class='row'>
+		<section class='col-md-12'>
+			<section ui-view='ordersList'></section>
+		</section>
+	</section>
+	<section class='row'>
+		<section class='col-md-6'>
+			<section ui-view='usersList'></section>
+		</section>
+		<section class='col-md-6'>
+			<section ui-view='productsList'></section>
+		</section>
+	</section>
+</section>	
