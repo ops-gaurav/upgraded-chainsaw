@@ -128,8 +128,29 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 
 	//$scope.fetchProducts();
 
-	$scope.setImage = function (file, errFiles) {
-		$scope.file = file;
+	$scope.setImage = function (file, errFiles, id) {
+		$scope.file = {};
+		$scope.file[id] = file;
+
+		var url ='/product/addImage/'+ id;
+		// process saving file
+		Upload.upload ({
+			url: url,
+			method: 'PUT',
+			data: {avatar: file}
+		}). then (function (d){
+			if (d.data.status == 'success') {
+				var image = d.data.data.image;
+				var nUrl = 'http://localhost:3000/product/image/'+ image.value +'/'+ image.mime;
+				console.log (nUrl);	
+				$('#'+id).attr ('src', nUrl);
+			}
+			else
+				console.log (d.data.message);
+		}, function (d) {
+			console.error (JSON.stringify(d));
+		});
+		//$scope.file = file;
 	}
 
 	$scope.createProduct = function () {

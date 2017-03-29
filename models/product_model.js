@@ -6,7 +6,7 @@ var ProductSchema = new Schema ({
     price: Number,
     image: {
         mime: String,
-        value: Buffer
+        value: String
     }
 });
 

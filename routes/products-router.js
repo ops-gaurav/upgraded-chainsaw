@@ -8,12 +8,12 @@ import fs from 'fs';
 
 var storage = multer.diskStorage ({
     destination: (req, file, next) => {
-        next (null, '/tempUploads');
+        next (null, './tempUploads');
     },
     filename: (req, file, next) => {
         req.image = {};
         req.image.mimetype = file.mimetype;
-        next (null, req.user.doc.username+'_pic');
+        next (null, 'product_'+ req.params.id+'_pic');
     }
 });
 
@@ -77,6 +77,37 @@ router.post ('/add', (req, res) => {
         }
     } else
         res.send ({status: 'error', message: 'login first'});
+});
+
+router.put ('/addImage/:id', (req, res) => {
+    upload (req, res, (err) => {
+        if (err) res.send ({status: 'error', message: 'error uploading: '+ err});
+        else {
+            mongoose.Promise = es6Promise;
+            mongoose.connect (config.host, config.db);
+
+            Product.findOne ({_id: req.params.id}, (err, data) => {
+                if (err) res.send ({status: 'error', message: 'Error: '+ err});
+                else if (data) {
+                    data.image = {
+                        mime: req.image.mimetype.replace ('/', '-'),
+                        value: 'product_'+ req.params.id +'_pic'
+                    }
+
+                    data.save (). then (() => {
+                        res.send ({status: 'success', data: data});
+                        mongoose.disconnect ();
+                    });
+                } else res.send ({status: 'error', message: 'no data'});
+            });
+        }
+    });
+});
+
+router.get ('/image/:id/:mime', (req, res) => {
+    res.contentType (req.params.mime.replace ('-', '/'));
+    var image = fs.readFileSync (__dirname +'/../tempUploads/'+ req.params.id);
+    res.end (image, 'binary');
 });
 
 router.put ('/update/:id', (req, res) => {
