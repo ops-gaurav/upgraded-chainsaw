@@ -113,13 +113,20 @@ router.get ('/image/:id/:mime', (req, res) => {
 });
 
 router.put ('/update/:id', (req, res) => {
-    if (req.session.user) {
-        if (req.session.user.type == 'admin') {
+    if (req.isAuthenticated()) {
+        if (req.user.doc.type == 'admin') {
 
-            if (req.body.name && req.body.price) {
+            if (req.body.name && req.body.price && req.body.category) {
                 mongoose.Promise = es6Promise;
                 mongoose.connect (config.host, config.db);
-                Product.update ({_id: req.params.id}, req.body, (err, doc) => {
+                
+                var updateDoc = {
+                    name: req.body.name,
+                    price: req.body.price,
+                    category: req.body.category
+                }
+
+                Product.update ({_id: req.params.id}, updateDoc, (err, doc) => {
                     if (err) res.send ({status:'error', message: 'server error'});
                     else res.send ({status: 'success', message: 'updated'});
 

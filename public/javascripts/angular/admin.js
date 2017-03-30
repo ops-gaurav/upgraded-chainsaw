@@ -340,6 +340,37 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 			console.error ("ERROR: "+ JSON.stringify (data));
 		});
 	}
+
+	$scope.editProductDialogue = function (_p) {
+		$scope.edit = _p;
+
+		showEditModal();
+	}
+
+	function showEditModal () {
+		$('#edit-product-modal').modal ({
+			backdrop: true,
+			keyboard: false
+		});
+	}
+	function hideEditModal () {
+		$('#edit-product-modal').modal ('hide');
+	}
+
+	$scope.editProductRequest = function () {
+		// alert ('Update '+ $scope.edit);
+		$http.put ('/product/update/'+ $scope.edit._id, {name: $scope.edit.name, price: $scope.edit.price, category: $scope.edit.category}).then (function (d) {
+			if (d.data.status == 'success') {
+				hideEditModal();
+
+				$scope.edit = undefined;
+			}
+			else
+				console.error (d.data.message);
+		}, function (d) {
+			console.error (JSON.stringify (d));
+		});
+	}
 }]);
 
 app.controller ('AdminController', ['$rootScope', '$http', '$window', '$state', function ($rootScope, $http, $window, $state) {
