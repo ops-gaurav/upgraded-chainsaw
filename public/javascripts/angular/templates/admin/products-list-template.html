@@ -42,7 +42,7 @@
 					<td>{{product.category}}</td>
 					<td>{{product.price | currency:"&#8377;"}}</td>
 					<td>
-						<button class='btn btn-default btn-sm' ng-click='deleteConfirmation (user)'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+						<button ng-click='deleteConfirmation (product)' class='btn btn-default btn-sm' ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 						<button ng-click='editProductDialogue (product)' ng-disabled='user.type == "admin"' class='btn btn-default btn-sm'><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 					</td>
 				</tr>
@@ -109,5 +109,24 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="delete-product-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Delete product</h4>
+				</div>
+				<div class="modal-body">
+					Are you sure to delete {{edit.name}} from products?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Nope</button>
+					<button type="button" class="btn btn-primary" ng-click='deleteProductRequest()'>Yep</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	
 </div>

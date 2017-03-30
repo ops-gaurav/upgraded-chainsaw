@@ -357,6 +357,24 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 		$('#edit-product-modal').modal ('hide');
 	}
 
+	$scope.deleteConfirmation = function (product) {
+		// set the global edit
+		$scope.edit = product;
+
+		showDeleteModal();
+	}
+
+	function showDeleteModal () {
+		$('#delete-product-modal').modal({
+			backdrop: true,
+			keyboard: false
+		});
+	}
+
+	function hideDeleteModal () {
+		$('#delete-product-modal').modal ('hide');
+	}
+
 	$scope.editProductRequest = function () {
 		// alert ('Update '+ $scope.edit);
 		$http.put ('/product/update/'+ $scope.edit._id, {name: $scope.edit.name, price: $scope.edit.price, category: $scope.edit.category}).then (function (d) {
@@ -369,6 +387,26 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 				console.error (d.data.message);
 		}, function (d) {
 			console.error (JSON.stringify (d));
+		});
+	}
+
+	$scope.deleteProductRequest = function () {
+		$http.delete ('/product/delete/'+ $scope.edit._id). then (function (d) {
+			if (d.data.status == 'success') {
+				console.log ('deleted product '+ $scope.edit.name);
+				for (var i=0; i< $scope.products.length; i++) {
+					if ($scope.products[i]._id == $scope.edit._id){
+						$scope.products.splice (i, 1);
+						$scope.rawData.splice (i, 1);
+						break;
+					}
+				}
+			} else
+				console.error (d.data.message``);
+			hideDeleteModal();
+		}, function (d) {
+			console.error (JSON.stringify(d));
+			hideDeleteModal();
 		});
 	}
 }]);
