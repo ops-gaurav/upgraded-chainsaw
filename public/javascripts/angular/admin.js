@@ -248,7 +248,10 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 
 	$scope.products = [];
 	$scope.newProductModal = function () {
-		$('#new-product-modal').modal ();
+		$('#new-product-modal').modal ({
+			backdrop: true,
+			keyboard: false
+		});
 	}
 
 	$scope.setCategory = function (category) {

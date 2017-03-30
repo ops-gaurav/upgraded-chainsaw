@@ -38,8 +38,8 @@
 					<td>{{user.username}}</td>
 					<td>{{user.type}}</td>
 					<td>
-						<button ng-disabled='user.type == "admin"' class='btn btn-danger btn-sm' ng-click='deleteConfirmation (user)'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&nbsp; remove</button>
-						<button ng-click='editUser (user)' ng-disabled='user.type == "admin"' class='btn btn-primary btn-sm'><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp; edit</button>
+						<button ng-disabled='user.type == "admin"' class='btn btn-danger btn-sm' ng-click='deleteConfirmation (user)'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+						<button ng-click='editUser (user)' ng-disabled='user.type == "admin"' class='btn btn-primary btn-sm'><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 					</td>
 				</tr>
 			</tbody>
