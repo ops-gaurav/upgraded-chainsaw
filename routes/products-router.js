@@ -64,8 +64,9 @@ router.post ('/add', (req, res) => {
                 mongoose.promise = es6Promise;
                 mongoose.connect (config.host, config.db);
                 var product = new Product({
-                    name: req.body.name,
-                    price: req.body.price
+                    name: data.name,
+                    price: data.price,
+                    category: data.category
                 });
 
                 product.save().then (() => {

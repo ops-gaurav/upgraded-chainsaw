@@ -48,7 +48,7 @@ router.get ('/myorders', (req, res) => {
         mongoose.Promise = es6Promise;
         mongoose.connect (config.host, config.db);
 
-        Order.find ({_user: req.user.doc._id}).populate ('_product', 'name price').exec ((err, data) => {
+        Order.find ({_user: req.user.doc._id}).populate ('_product', '_id name price image').exec ((err, data) => {
             if (err) res.send ({status: 'error', message: err});
             else res.send ({status: 'success', data: data});
 

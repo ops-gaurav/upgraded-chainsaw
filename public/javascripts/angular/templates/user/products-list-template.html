@@ -1,6 +1,25 @@
+<h4>{{pageTitle}}</h4>
 <div class="panel panel-default">
     <div class='panel-heading'>
-        <h4>{{pageTitle}}</h4>
+        <form class="form-inline">
+            <div class="form-group">
+               
+            </div>
+            <div class="form-group">
+                <div class="dropdown">
+                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Filter: <i>Showing all</i>
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li ng-click='fetchProducts()'>
+                            <a href="#" >All</a>
+                        </li>
+                        <li ng-repeat='category in productCategories' ng-click='fetchCategory(category)'>
+                            <a href="#">{{category}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
     </div>
     <div class="panel-body">
         <table class='table table-striped'>
@@ -15,7 +34,10 @@
             </thead>
             <tbody>
                 <tr ng-repeat='product in products'>
-                    <td><img src='/images/product.png' width=40/></td>
+                    <td>
+                        <p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
+						<p class='text-center' ng-hide='product.image'><img class='{{product._id}}' src='images/product.png'  width=40 /><p>
+                    </td>
                     <td>{{product.name}}</td>
                     <td>{{product.price | currency:"&#8377;"}}</td>
                     <td>{{product.category}}</td>

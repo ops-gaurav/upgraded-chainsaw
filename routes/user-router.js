@@ -125,4 +125,52 @@ router.post ('/signup', (req, res) => {
 	}
 });
 
+router.put ('/update/:id', (req, res) => {
+	var data = req.body;
+	// console.log ('request here');
+	if (data.username && data.password && data.phone && 
+		data.email && data.type) {
+
+		if (req.params.id) {
+
+			mongoose.Promise = es6Promise;
+			mongoose.connect (config.host, config.db);
+
+			User.findOne ({_id: req.params.id}, (err, doc) => {
+				if (err) res.send (eRes ('Server error: '+ err))
+				else if (doc) {
+					doc.username = data.username;
+					doc.password = data.password;
+					doc.phone = data.phone;
+					doc.email = data.phone;
+					doc.type = data.type;
+
+					doc.save (). then (() => {
+						mongoose.disconnect ();
+						res.send ({status: 'success', message: 'authenticated', data: doc});
+					});
+				} else res.send (eRes ('No user found'));
+			})
+		} else res.send (eRes ('no id provided'));
+	} else res.send (eRes ('Data incomplete'));
+});
+
+router.delete ('/delete/:id', (req, res) => {
+	if (req.isAuthenticated()) {
+		if (req.user.doc.type == 'admin') {
+			if (req.params.id) {
+				mongoose.Promise = es6Promise;
+				mongoose.connect (config.host, config.db);
+
+				User.remove ({_id: req.params.id}, (err) => {
+					if (err) res.send (eRes ('error deleting: '+ err));
+					else res.send (sRes ('deleted'));
+
+					mongoose.disconnect ();
+				});
+			} else res.send (eRes ('Id not sent'));
+		} else res.send (eRes ('You need to be admin'));
+	} else res.send (eRes ('login first'));
+});
+
 module.exports = router;

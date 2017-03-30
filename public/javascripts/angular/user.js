@@ -32,11 +32,16 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 
 app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$log', function ($scope, $rootScope, $http, $log) {
     $scope.pageTitle = 'We have following products for you to shop today';
+    $scope.productCategories = [ 'Electronics' , 'Art', 'Sports' ];
+
+    $scope.rawData = [];
 
     $scope.fetchProducts = function () {
         $http.get ('/product/all').then (function(d){
             if (d.data.status == 'success'){
-                $scope.products = d.data.data;
+                $scope.rawData = d.data.data;
+                // represents the display data
+                $scope.products = $scope.rawData;
                 $log.log ($scope.products);
             }
             else
@@ -52,6 +57,26 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
             $rootScope.fetchOrders();
         });
     };
+
+    $scope.fetchCategory = function (category) {
+        // filter existing data instead of fetching new
+        var _productsAlias = [];
+        for (var i=0; i<$scope.rawData.length;i++) {
+            var  p =$scope.rawData[i];
+            if (p.category == category) {
+                _productsAlias.push ({
+                    _id: p._id,
+                    category: p.category,
+                    image: p.image,
+                    name: p.name,
+                    price: p.price
+                });
+            }
+        }
+        $scope.products = [];
+        $scope.products = _productsAlias;
+
+    }
 
     $scope.fetchProducts();
 
@@ -77,7 +102,7 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
         $http.get ('/order/myorders').then (function (data){
             if (data.data.status == 'success' ) {
                 $scope.orders = data.data.data;
-                console.log ('orders: '+ $scope.orders);
+                console.log ('orders: '+ JSON.stringify($scope.orders));
             }
             else
                 console.log (data.data.message);
@@ -92,8 +117,10 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
  */
 app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$window', function ($scope, $rootScope, $http, $log, $window) {
     $http.get ('/user/sessionInfo'). then (function (d) {
-        if (d.data.status == 'success')
-            $scope.sessionInfo = d.data.message.doc;
+        if (d.data.status == 'success') {
+            $rootScope.sessionInfo = d.data.message.doc;
+            console.log ($scope.sessionInfo);
+        }
         else
             $window.location = '/';
     }, function (d) {

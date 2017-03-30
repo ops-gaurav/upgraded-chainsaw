@@ -13,7 +13,10 @@
             </thead>
             <tbody>
                 <tr ng-repeat='order in orders'>
-                    <td><img src='/images/product.png' width=40/></td>
+                    <td>
+                        <p ng-if='order._product.image'><img class='{{order._product._id}}' ng-src='/product/image/{{order._product.image.value}}/{{order._product.image.mime}}'  width=40 /><p>
+						<p ng-hide='order._product.image'><img class='{{order._product._id}}' src='images/product.png'  width=40 /><p>
+                    </td>
                     <td>{{order._product.name}}</td>
                     <td>{{order._product.price | currency:"&#8377;"}}</td>
                 </tr>

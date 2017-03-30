@@ -1,24 +1,44 @@
+<h3>{{title}}</h3>
 <div class="panel panel-default">
 	<div class='panel-heading'>
-		<h3>{{title}}</h3>
-		<a class='btn btn-danger btn-sm' ng-click='newProductModal()'> + Add new product</a>
+		 <form class="form-inline">
+            <div class="form-group">
+               <div class="dropdown">
+                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Filter: <i>{{selectedCategory}}</i>
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li ng-click='fetchProducts()'>
+                            <a href="#" >All</a>
+                        </li>
+                        <li ng-repeat='category in productCategories' ng-click='fetchCategory(category)'>
+                            <a href="#">{{category}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+				<a class='btn btn-success btn-sm' ng-click='newProductModal()'> + Add new product</a>
+            </div>
+        </form>
 	</div>
-	<div class="panel-body">
-		<table class="table table-hover table-striped">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover table-striped table-bordered">
 			<thead>
 				<td></td>
 				<td>Product</td>
+				<td>Category</td>
 				<td>price</td>
 			</thead>
 			<tbody>
 				<tr ng-repeat='product in products'>
 					<td>
 						<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, product._id)'>
-							<p ng-if='product.image'><img id='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  width=40 /><p>
-							<p ng-hide='product.image'><img src='images/product.png'  width=40 /><p>
+							<p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
+							<p ng-hide='product.image'><img class='{{product._id}}' src='images/product.png'  width=40 /><p>
 						</a>
 					</td>
 					<td>{{product.name}}</td>
+					<td>{{product.category}}</td>
 					<td>{{product.price | currency:"&#8377;"}}</td>
 				</tr>
 			</tbody>
@@ -37,6 +57,16 @@
 				<div class="modal-body">
 					<input class='form-control' ng-model='pName' type='text' placeholder='Product name'/> <br/>
 					<input class='form-control' ng-model='pPrice' type='number' placeholder="price" />
+					<br/>
+					<div class="dropdown">
+						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Category: {{selectedCategory}}
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li ng-repeat='category in productCategories'>
+								<a href="#" ng-click='setCategory(category)'>{{category}}</a>
+							</li>
+						</ul>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
