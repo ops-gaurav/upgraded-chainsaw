@@ -152,7 +152,7 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 	$scope.createUser = function () {
 		$http.post ('/user/signup', {username: $scope.nUsername, password: $scope.nPassword, phone: $scope.nPhone, email: $scope.nEmail, type: $scope.nType}). then (function (d) {
 			if (d.data.status =='success') {
-				$scope.users.push (d.data.raw);
+				$scope.users.push (d.data.raw)
 				$('#new-user-modal').modal ('hide');
 			} else
 				console.log (d.data.message);
@@ -221,7 +221,14 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 			if (d.data.status == 'success')
 			{
 				console.log ('deleted user '+ delUser.username);
-				$scope.fetchUsers();
+				for (var i=0; i< $scope.users.length; i++) {
+					if ($scope.users[i]._id == delUser._id){
+						$scope.users.splice (i, 1);
+						$scope.rawData.splice (i, 1);
+						break;
+					}
+				}
+				$scope.users.splice ();
 			} else	console.error (d.data.message);
 
 			$scope.hideDelConfirmation();

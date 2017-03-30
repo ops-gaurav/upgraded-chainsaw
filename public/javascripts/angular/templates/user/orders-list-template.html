@@ -14,8 +14,8 @@
             <tbody>
                 <tr ng-repeat='order in orders'>
                     <td>
-                        <p ng-if='order._product.image'><img class='{{order._product._id}}' ng-src='/product/image/{{order._product.image.value}}/{{order._product.image.mime}}'  width=40 /><p>
-						<p ng-hide='order._product.image'><img class='{{order._product._id}}' src='images/product.png'  width=40 /><p>
+                        <p class='text-center' ng-if='order._product.image'><img class='{{order._product._id}}' ng-src='/product/image/{{order._product.image.value}}/{{order._product.image.mime}}'  height=40 /><p>
+						<p class='text-center' ng-hide='order._product.image'><img class='{{order._product._id}}' src='images/product.png'  width=40 /><p>
                     </td>
                     <td>{{order._product.name}}</td>
                     <td>{{order._product.price | currency:"&#8377;"}}</td>
