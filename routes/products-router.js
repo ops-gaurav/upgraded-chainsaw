@@ -23,6 +23,7 @@ router.get ('/all', (req, res) => {
 	if (req.isAuthenticated ()) {
         mongoose.Promise = es6Promise;
         mongoose.connect (config.host, config.db);
+
 		Product.find ({}, (err, docs) => {
 			if (err) 
 				res.send ({status: 'error', message: 'some server error'});

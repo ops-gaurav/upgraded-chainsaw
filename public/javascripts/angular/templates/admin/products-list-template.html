@@ -14,8 +14,8 @@
 				<tr ng-repeat='product in products'>
 					<td>
 						<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, product._id)'>
-							<p ng-show='product.image'><img id='{{product._id}}' ngf-thumbnail='/images/product.png' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  width=40 /><p>
-							<p ng-hide='product.image'><img src='/images/product.png'  width=40 /><p>
+							<p ng-if='product.image'><img id='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  width=40 /><p>
+							<p ng-hide='product.image'><img src='images/product.png'  width=40 /><p>
 						</a>
 					</td>
 					<td>{{product.name}}</td>
