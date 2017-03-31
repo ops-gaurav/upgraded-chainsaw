@@ -146,7 +146,10 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 	}
 
 	$scope.showNewUserModal = function() {
-		$('#new-user-modal').modal();
+		$('#new-user-modal').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
 	}
 
 	$scope.createUser = function () {
@@ -301,7 +304,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 	$scope.products = [];
 	$scope.newProductModal = function () {
 		$('#new-product-modal').modal ({
-			backdrop: true,
+			backdrop: 'static',
 			keyboard: false
 		});
 	}
@@ -401,7 +404,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 
 	function showEditModal () {
 		$('#edit-product-modal').modal ({
-			backdrop: true,
+			backdrop: 'static',
 			keyboard: false
 		});
 	}
@@ -418,7 +421,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 
 	function showDeleteModal () {
 		$('#delete-product-modal').modal({
-			backdrop: true,
+			backdrop: 'static',
 			keyboard: false
 		});
 	}
