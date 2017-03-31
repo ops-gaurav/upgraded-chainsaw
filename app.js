@@ -37,6 +37,7 @@ app.use ( passport.session() );
 app.use (flash ());
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use (express.static (path.join (__dirname, 'bower_components')));
 
 app.use ('/', index);
 app.use ('/user', user);

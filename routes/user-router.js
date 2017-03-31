@@ -125,6 +125,23 @@ router.post ('/signup', (req, res) => {
 	}
 });
 
+router.get ('/usernameLookup/:username', (req, res) => {
+	if (req.params.username) {
+		mongoose.Promise = es6Promise;
+		mongoose.connect (config.host, config.db);
+
+		User.findOne ({username: req.params.username}, (err, doc) => {
+			if (err) res.send (eRes ('Error: '+ err));
+			else if (doc) 
+				res.send (sRes('username found'))
+			 else res.send (eRes ('username not found'));
+
+			mongoose.disconnect();
+		});
+	}
+	else res.send (eRes ('no username provided'));
+})
+
 router.put ('/update/:id', (req, res) => {
 	var data = req.body;
 	// console.log ('request here');
@@ -142,7 +159,7 @@ router.put ('/update/:id', (req, res) => {
 					doc.username = data.username;
 					doc.password = data.password;
 					doc.phone = data.phone;
-					doc.email = data.phone;
+					doc.email = data.email;
 					doc.type = data.type;
 
 					doc.save (). then (() => {

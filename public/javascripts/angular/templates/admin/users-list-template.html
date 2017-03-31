@@ -55,17 +55,52 @@
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title">Add new user</h4>
 				</div>
-				<div class="modal-body">	
-					<input class='form-control' ng-model='nUsername' type='text' placeholder='new username'/> <br/>
-					<input class='form-control' type='password' ng-model='nPassword' placeholder="new password" /> <br/>
-					<input class='form-control' type='text' ng-model='nPhone' placeholder="Phone number" /> <br/>
-					<input class='form-control' type='text' ng-model='nEmail' placeholder="email address" /> <br/>
-					<input class='form-control' type='text' ng-model='nType' placeholder="admin or user" /> <br/>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary" ng-click='createUser()'>Create product</button>
-				</div>
+				<form name='newUserForm' ng-submit="createUser ()">
+					<div class="modal-body">
+						All fields are required
+						<section class='form-group'>
+							<label>Username</label>
+							<input class='form-control' ng-blur="usernameLookup()" name='nUsername' ng-model='nUsername' type='text' placeholder='new username' required/> 
+							<label ng-show='editUSuccess' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Username available</label>
+							<label ng-show='editUFailure' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Username not available</label>	
+							<div ng-show='editCheckUsername' class='loader'></div>
+						</section>
+
+						<section class='form-group'>
+							<label>Phone number</label>
+							<input class='form-control' ng-model='nPhone' name = 'nPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
+						</section>
+
+						<section class='form-group'>
+							<label>Password</label>
+							<input class='form-control' ng-model='nPassword' name = 'nPassword' type='password' placeholder='New password' required/> 
+						</section>
+						<section class='form-group'>
+							<label>Confirm password</label>
+							<input class='form-control' ng-model='cPassword' name = 'cPassword' type='password' placeholder='Confirm password' required/>
+							 <label ng-show='cPassword == nPassword && cPassword' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp; Password Match</label>
+							<label ng-show='cPassword != nPassword' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Passwords did not match</label>
+						</section>
+						<section class='form-group'>
+							<label>Email id</label>
+							<input class='form-control' name='nEmail' ng-model='nEmail' type='email' placeholder='Edit email' required/> 
+							<label ng-show='$newUserForm.nEmail.$invalid' class='label label-danger'>Email invalid</label>
+						</section>
+						<div class="dropdown" ng-init='nType="user"'>
+							<label>User type</label>
+							<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{nType}}
+							<span class="caret"></span></button>
+							<ul class="dropdown-menu">
+								<li ng-click='nType = "admin"'><a href="#">Admin</a></li>
+								<li ng-click='nType = "user"'><a href="#">User</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
+						<button ng-disabled ='newUserForm.$invalid' type="submit" class="btn btn-primary">Create</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -77,17 +112,40 @@
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title">Edit user</h4>
 				</div>
-				<div class="modal-body">	
-					<input class='form-control' ng-model='edit.username' type='text' placeholder='new username'/> <br/>
-					<input class='form-control' type='password' ng-model='edit.password' placeholder="new password" /> <br/>
-					<input class='form-control' type='text' ng-model='edit.phone' placeholder="Phone number" /> <br/>
-					<input class='form-control' type='text' ng-model='edit.email' placeholder="email address" /> <br/>
-					<input class='form-control' type='text' ng-model='edit.type' placeholder="admin or user" /> <br/>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
-					<button type="button" class="btn btn-primary" ng-click='updateUser(edit)'>Update</button>
-				</div>
+				<form name='editForm' ng-submit="updateUser (edit)">
+					<div class="modal-body">
+						<section class='form-group'>
+							<label>Username</label>
+							<input class='form-control' ng-blur="usernameLookup()" name='editUsername' ng-model='edit.username' type='text' placeholder='new username' required/> 
+							<label ng-show='editUSuccess' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Username available</label>
+							<label ng-show='editUFailure' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Username not available</label>	
+							<div ng-show='editCheckUsername' class='loader'></div>
+						</section>
+					
+						<section class='form-group'>
+							<label>Phone number</label>
+							<input class='form-control' ng-model='edit.phone' name = 'editPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
+						</section>
+						<section class='form-group'>
+							<label>Email id</label>
+							<input class='form-control' name='editEmail' ng-model='edit.email' type='email' placeholder='Edit email' required/> 
+							<label ng-show='editForm.editEmail.$invalid' class='label label-danger'>Email invalid</label>
+						</section>
+						<div class="dropdown">
+							<label>User type</label>
+							<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{edit.type}}
+							<span class="caret"></span></button>
+							<ul class="dropdown-menu">
+								<li ng-click='edit.type = "admin"'><a href="#">Admin</a></li>
+								<li ng-click='edit.type = "user"'><a href="#">User</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
+						<button ng-disabled ='editForm.$invalid' type="submit" class="btn btn-primary">Update</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

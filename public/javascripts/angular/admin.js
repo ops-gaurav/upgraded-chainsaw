@@ -1,4 +1,4 @@
-var app = angular.module ('admin', ['ui.router', 'ngFileUpload']);
+var app = angular.module ('admin', ['ui.router', 'ngFileUpload', 'ngMask']);
 
 app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
@@ -175,6 +175,58 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 	$scope.closeEditModal = function () {
 		$scope.edit = {};
 		$('#edit-user-modal').modal ('hide');
+	}
+
+	$scope.usernameLookup = function () {
+		$scope.editCheckUsername = true;
+
+		if ($scope.edit) {
+			if ($scope.edit.username && $scope.edit.username != '') {
+
+				$http.get ('/user/usernameLookup/'+ $scope.edit.username). then (function (d){
+					if (d.data.status == 'success') {
+						$scope.editUSuccess = false;
+						$scope.editUFailure = true;
+
+						$scope.editCheckUsername = false;	
+					} else {
+						$scope.editUSuccess = true;
+						$scope.editUFailure = false;
+						$scope.editCheckUsername = false;
+					}
+				}, function (d) {
+					console.error (JSON.stringify(d));
+				});
+
+			} else {
+				$scope.editForm.editUsername.$setValidity ('', false);
+				$scope.editUSucess = false;
+			}
+		} else {
+			if ($scope.nUsername && $scope.nUsername != '') {
+
+				$http.get ('/user/usernameLookup/'+ $scope.nUsername). then (function (d){
+					if (d.data.status == 'success') {
+						$scope.editUSuccess = false;
+						$scope.editUFailure = true;
+
+						$scope.editCheckUsername = false;	
+					} else {
+						$scope.editUSuccess = true;
+						$scope.editUFailure = false;
+						$scope.editCheckUsername = false;
+					}
+				}, function (d) {
+					console.error (JSON.stringify(d));
+				});
+
+			} else {
+				$scope.newUserForm.nUsername.$setValidity ('', false);
+				$scope.editUSucess = false;
+
+				$scope.editCheckUsername = false;
+			}
+		}
 	}
 
 	$scope.updateUser = function (edit) {
