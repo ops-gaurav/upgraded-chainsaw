@@ -113,6 +113,7 @@ app.controller ('SignupController', ['$scope', '$window', '$http', function ($sc
 			console.error (JSON.stringify(d));
 		});
 	}
+
 }]);
 
 app.service ('ApplicationServices', ['$resource', function ($resource) {

@@ -14,6 +14,9 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.min.js'></script>
 
+		<!-- ngMask dependency from bower -->
+		<script src='/ngMask/dist/ngMask.min.js' ></script>
+
 		<!-- for image upload -->
 		<script src='https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js'></script>
 		<script src='https://angular-file-upload.appspot.com/js/ng-file-upload.js'></script>
@@ -40,8 +43,9 @@
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav navbar-right">
 						<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, sessionInfo._id)'>
-							<img ng-if='sessionInfo.image' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
+							<img ng-if='sessionInfo.image && !newImage' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
 							<img ng-hide='sessionInfo.image' class='{{sessionInfo._id}} img-circle' src='images/profile.png'  width=40 />
+							<img ng-if='newImage' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
 						</a>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -50,6 +54,7 @@
 							<ul class="dropdown-menu">
 								<li><a href ng-click="logout()">Logout</a></li>
 								<li><a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, sessionInfo._id)'>Change profile pic</a></li>
+								<li><a href ng-click='showEditDialogue()'>Update information</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -60,6 +65,35 @@
 		<section ui-view></section>
 
 		<footer></footer>
+
+		<div class="modal fade" id="edit-user-modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Edit user</h4>
+						You can only update your email and phone number
+					</div>
+					<form name='editForm' ng-submit="updateUserRequest ()">
+						<div class="modal-body">
+							<section class='form-group'>
+								<label>Phone number</label>
+								<input class='form-control' ng-value='sessionInfo.phone' ng-model='edit.phone' ng-model='edit.phone' name = 'editPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
+							</section>
+							<section class='form-group'>
+								<label>Email id</label>
+								<input class='form-control' name='editEmail' ng-value='sessionInfo.email' ng-model='edit.email' type='email' placeholder='Edit email' required/> 
+								<label ng-show='editForm.editEmail.$invalid' class='label label-danger'>Email invalid</label>
+							</section>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
+							<button ng-disabled ='editForm.$invalid' type="submit" class="btn btn-primary">Update</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
 	</body>
 </html>

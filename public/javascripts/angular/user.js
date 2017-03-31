@@ -1,4 +1,4 @@
-var app = angular.module ('user', ['ui.router', 'ngFileUpload']);
+var app = angular.module ('user', ['ui.router', 'ngFileUpload', 'ngMask']);
 
 app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
@@ -134,33 +134,71 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
     }
 
     $rootScope.setImage = function (file, errFiles, id) {
-        alert ('called');
-        $scope.file = {};
-		$scope.file[id] = file;
+        if (file) {
+            $scope.file = {};
+            $scope.file[id] = file;
 
-		var url ='/user/addImage/'+ id;
-		// process saving file
-		Upload.upload ({
-			url: url,
-			method: 'PUT',
-			data: {avatar: file}
-		}). then (function (d){
+            var url ='/user/addImage/'+ id;
+            // process saving file
+            Upload.upload ({
+                url: url,
+                method: 'PUT',
+                data: {avatar: file}
+            }). then (function (d){
+                if (d.data.status == 'success') {
+                    var image = d.data.data.image;
+
+                    var nUrl = 'http://localhost:3000/user/image/'+ image.value +'/'+ image.mime;
+
+                   location.reload ();
+                }
+                else
+                    console.log (d.data.message);
+            }, function (d) {
+                console.error (JSON.stringify(d));
+            });
+        }
+	}
+
+    $rootScope.showEditDialogue = function() {
+        showEditModal ();
+    }
+
+    $rootScope.updateUserRequest = function () {
+        // console.log ($scope.edit);
+        var edit = $rootScope.edit;
+        console.log (edit);
+		var reqData = {
+			_id: $rootScope.sessionInfo._id,
+			username: $rootScope.sessionInfo.username,
+			email: edit.email,
+			phone: edit.phone,
+			password: $rootScope.sessionInfo.password,
+			type: "user"
+		};
+		// console.log (reqData);
+		$http.put ('/user/update/'+$rootScope.sessionInfo._id, reqData). then (function (d) {
+
 			if (d.data.status == 'success') {
-				var image = d.data.data.image;
+				console.log (d.data.data+ ' updated');
+			} else
+				console.error (d.data.message);
 
-                $rootScope.sessionInfo = d.data.data;
-
-				var nUrl = 'http://localhost:3000/user/image/'+ image.value +'/'+ image.mime;
-
-				console.log (nUrl);	
-                // console.log ($('.'+ id));
-				$('.'+id).attr ('src', nUrl);
-			}
-			else
-				console.log (d.data.message);
+			closeEditModal();
 		}, function (d) {
 			console.error (JSON.stringify(d));
+			closeEditModal();
 		});
-		$scope.file = file;
-	}
+    }
+
+    function showEditModal () {
+        $('#edit-user-modal').modal ({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    function closeEditModal () {
+        $('#edit-user-modal').modal ('hide');
+    }
 }]);
