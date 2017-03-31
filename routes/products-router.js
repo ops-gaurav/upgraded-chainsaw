@@ -59,7 +59,7 @@ router.post ('/add', (req, res) => {
     console.log (data);
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
-
+                
             if (data.name && data.price) {
                 mongoose.promise = es6Promise;
                 mongoose.connect (config.host, config.db);

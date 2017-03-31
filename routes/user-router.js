@@ -2,10 +2,23 @@ import express from 'express';
 import passport from 'passport';
 import mongoose from 'mongoose';
 import LocalStrategy from 'passport-local';
-
 import User from '../models/user_model';
-
 import config from '../data/config';
+import multer from 'multer';
+import fs from 'fs';
+
+var storage = multer.diskStorage ({
+	destination: (req, file, next) => {
+		next (null, './tempUploads');
+	},
+	filename: (req, file, next) => {
+		req.image = {};
+		req.image.mimetype = file.mimetype;
+		next (null, req.user.doc.username +'_avatar');
+	}
+});
+
+var upload = multer ({storage: storage}).single ('avatar');
 
 var router = express.Router();
 var es6Promise = require ('es6-promise').Promise;
@@ -189,5 +202,41 @@ router.delete ('/delete/:id', (req, res) => {
 		} else res.send (eRes ('You need to be admin'));
 	} else res.send (eRes ('login first'));
 });
+
+router.put ('/addImage/:id', (req, res) => {
+	upload (req, res, (err) => {
+        if (err) res.send ({status: 'error', message: 'error uploading: '+ err});
+        else {
+            mongoose.Promise = es6Promise;
+            mongoose.connect (config.host, config.db);
+
+            User.findOne ({_id: req.params.id}, (err, data) => {
+                if (err) {
+					res.send ({status: 'error', message: 'Error: '+ err});
+					mongoose.disconnect();
+                } else if (data) {
+                    data.image = {
+                        mime: req.image.mimetype.replace ('/', '-'),
+                        value: req.user.doc.username +'_avatar'
+                    }
+
+                    data.save (). then (() => {
+                        res.send ({status: 'success', data: data});
+                        mongoose.disconnect ();
+                    });
+                } else { 
+					res.send ({status: 'error', message: 'no data'});
+					mongoose.disconnect ();
+				}
+            });
+        }
+    });
+});
+
+router.get ('/image/:id/:mime', (req, res) => {
+	res.contentType (req.params.mime.replace ('-', '/'));
+    var image = fs.readFileSync (__dirname +'/../tempUploads/'+ req.params.id);
+    res.end (image, 'binary');
+})
 
 module.exports = router;

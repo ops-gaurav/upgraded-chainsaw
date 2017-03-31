@@ -1,4 +1,4 @@
-var app = angular.module ('user', ['ui.router']);
+var app = angular.module ('user', ['ui.router', 'ngFileUpload']);
 
 app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
@@ -115,7 +115,7 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
 /**
  * the default controller
  */
-app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$window', function ($scope, $rootScope, $http, $log, $window) {
+app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$window', 'Upload', function ($scope, $rootScope, $http, $log, $window, Upload) {
     $http.get ('/user/sessionInfo'). then (function (d) {
         if (d.data.status == 'success') {
             $rootScope.sessionInfo = d.data.message.doc;
@@ -132,4 +132,35 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
             $window.location = '/';
         });
     }
+
+    $rootScope.setImage = function (file, errFiles, id) {
+        alert ('called');
+        $scope.file = {};
+		$scope.file[id] = file;
+
+		var url ='/user/addImage/'+ id;
+		// process saving file
+		Upload.upload ({
+			url: url,
+			method: 'PUT',
+			data: {avatar: file}
+		}). then (function (d){
+			if (d.data.status == 'success') {
+				var image = d.data.data.image;
+
+                $rootScope.sessionInfo = d.data.data;
+
+				var nUrl = 'http://localhost:3000/user/image/'+ image.value +'/'+ image.mime;
+
+				console.log (nUrl);	
+                // console.log ($('.'+ id));
+				$('.'+id).attr ('src', nUrl);
+			}
+			else
+				console.log (d.data.message);
+		}, function (d) {
+			console.error (JSON.stringify(d));
+		});
+		$scope.file = file;
+	}
 }]);

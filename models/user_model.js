@@ -10,7 +10,7 @@ var UserSchema = new Schema({
     type: String,
     image: {
         mime: String,
-        value: Buffer
+        value: String   // contains path
     }
 });
 

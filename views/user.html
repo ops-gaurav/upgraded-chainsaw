@@ -15,25 +15,41 @@
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.min.js'></script>
 
 		<!-- for image upload -->
-		<!--<script src='https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js'></script>
-		<script src='https://angular-file-upload.appspot.com/js/ng-file-upload.js'></script>-->
+		<script src='https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js'></script>
+		<script src='https://angular-file-upload.appspot.com/js/ng-file-upload.js'></script>
 
 		<script src='javascripts/angular/user.js' ></script>
 	</head>
 	<body>
 		
 		<header>
+
+			
 			<nav class="navbar navbar-default" role="navigation">
+				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
 					<a class="navbar-brand" href="#">shop</a>
 				</div>
-
+			
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav navbar-right">
+						<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, sessionInfo._id)'>
+							<img ng-if='sessionInfo.image' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
+							<img ng-hide='sessionInfo.image' class='{{sessionInfo._id}} img-circle' src='images/profile.png'  width=40 />
+						</a>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{sessionInfo.username}} <b class="caret"></b></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								{{sessionInfo.username}} <b class="caret"></b>
+							</a>
 							<ul class="dropdown-menu">
 								<li><a href ng-click="logout()">Logout</a></li>
+								<li><a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, sessionInfo._id)'>Change profile pic</a></li>
 							</ul>
 						</li>
 					</ul>
