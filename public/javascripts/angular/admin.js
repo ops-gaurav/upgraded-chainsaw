@@ -7,7 +7,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 			url: '/admin',
 			views: {
 				'': {
-					templateUrl: '/javascripts/angular/templates/admin/admin-template.html',
+					templateUrl: '/javascripts/angular/templates/admin/admin-template-refined.html',
 					controller: 'AdminController'
 				},
 				

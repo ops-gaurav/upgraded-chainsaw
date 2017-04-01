@@ -4,55 +4,91 @@
 		<title>Admin</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+
 		<!-- jQuery JS 3.1.0 -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script src='/jquery/dist/jquery.min.js' ></script>
 		<!-- Bootstrap JS 3.3.7 -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
 		<!-- Bootstrap CSS 3.3.7 -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" >
 		<!-- AngularJS JS <1></1>.5.7 -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.min.js'></script>
+		<script src='/angular/angular.min.js'></script>
+		<script src='/angular-ui-router/release/angular-ui-router.min.js'></script>
+		<script src='/angular-resource/angular-resource.min.js'></script>
+
 		<!-- ngMask dependency from bower -->
 		<script src='/ngMask/dist/ngMask.min.js' ></script>
-		<!-- for image upload -->
-		<script src='https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js'></script>
-		<script src='https://angular-file-upload.appspot.com/js/ng-file-upload.js'></script>
+		<script src='/ngMask/dist/ngMask.min.js' ></script>
+
+		<!-- bower ng-file include dependency -->
+		<script src='/ng-file-upload/ng-file-upload-shim.min.js'></script>
+		<script src='/ng-file-upload/ng-file-upload.min.js'></script>
+
+		<!-- for graphs -->
+		<!-- deprecating becuse not responsive -->
+		<!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
+
+		<script src='/chart.js/dist/Chart.min.js'></script>
 
 		<script src='javascripts/angular/admin.js' ></script>
 		<link href='/stylesheets/style.css' rel='stylesheet' type='text/css'/>
+
+		<!-- for animations -->
+		<script src='/javascripts/transitions/admin.js'></script>
 	</head>
 	<body>
-		
 		<header>
-			
-			<nav class="navbar navbar-default" role="navigation">
-				<!-- Brand and toggle get grouped for better mobile display -->
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="#">shop</a>
-				</div>
-			
-				<div class="collapse navbar-collapse navbar-ex1-collapse">
-					<ul class="nav navbar-nav navbar-right">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{sessionInfo.username}} <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href ng-click="logout()">Logout</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</nav>
-			
+			<section class='menu-drawer'>
+				<button onclick="toggleDrawer ('appdrawer')" class='action-btn'><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>&nbsp; Control</button>
+				<img src='/images/logo.png' height=30 />
+			</section>
 		</header>
 
-		<section ui-view></section>
+		<br/>
+		<section class='application-drawer' id='appdrawer'>
+			<section class='drawer-content-container'>
+				
+				<section class='admin-info'>
+					<img src='/images/profile.png' width=50 height=50 class='img-circle'/>
+					<section class='admin-name'>
+						<p class='name'>
+							{{sessionInfo.username}}<br/>
+							<a class='email'>{{sessionInfo.email}}</a><br/>
+							<a class='user-type'>ADMIN</a>
+						</p>
+						
+					</section>
+				</section>
+
+				<section class='menu-container'>
+					<ul class="drawer-menu">
+						<li class="drawer-menu-item">
+							<span class="glyphicon glyphicon-dashboard drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;DASHBOARD
+						</li>
+						<li class="drawer-menu-item">
+							<span class="glyphicon glyphicon-file drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;ORDERS SUMMARY
+						</li>
+						<li class="drawer-menu-item">
+							<span class="glyphicon glyphicon-briefcase drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;PRODUCTS
+						</li>
+						<li class="drawer-menu-item">
+							<span class="glyphicon glyphicon-user drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;USERS
+						</li>
+						<li class="drawer-menu-item">
+							<span class="glyphicon glyphicon-list-alt drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;CATEGORIES
+						</li>
+						<li class="drawer-menu-item" ng-click='logout()'>
+							<span class="glyphicon glyphicon-lock drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;LOGOUT
+						</li>
+					</ul>
+				</section>
+			</section>
+			
+		</section>
+
+		<section id= 'body-content' ui-view></section>
 
 		<footer></footer>
 

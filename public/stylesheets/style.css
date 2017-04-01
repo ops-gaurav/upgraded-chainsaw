@@ -1,4 +1,103 @@
+*{
+    font-family: Muli;
+}
+a:focus {
+    outline: 0;
+}
+button:focus{ 
+    outline: 0;
+}
+header {
+    background: #fafafa;
+    border: none;
+    border-radius: 0px;
+    padding: 10px;
+    box-shadow: 0px 0px 10px 1px silver;
+    position: fixed;
+    width: 100%;
+    z-index: 999;
 
+}
+.action-btn {
+    border: solid 1px silver;
+    background: none;
+    border-radius: 3px;
+}
+.action-btn:focus {
+    outline: 0;
+}
+.application-drawer {
+    position: fixed;
+    margin-top: 30px;
+    height: 100%;
+    display: none;
+    background: #111111;
+    width: 0;
+    z-index: 999;
+    box-shadow: 4px 7px 10px 1px #666666;
+}
+.drawer-content-container {
+    position: relative;
+    height: 100%;
+}
+.drawer-icon {
+    color: #5c6063;
+}
+.drawer-menu {
+    background: none;
+    color: #fff;
+    border: none;
+    border-radius: 0px;
+    list-style: none;
+    padding-left: 0px;
+}
+.drawer-menu-item {
+    background: none;
+    padding: 10px;
+    margin-left: 0px;
+    color: #fff;
+    border: none;
+    font-size: 17px;
+    cursor: pointer;
+    padding: 20px 0px 20px 10px ;
+    border-bottom: solid 1px #5c6063;
+    transition: all .25s ease-in-out;
+    font-weight: normal;
+}
+.drawer-menu-item:hover {
+    color: yellow;
+}
+.admin-info {
+    position: relative;
+    padding: 10px;
+    background: #383838;
+    border-bottom: solid 1px #5c6063;
+}
+.admin-info img {
+    position: absolute;
+    background: #fff;
+}
+.email {
+    font-size: 13px;
+    color: #d9c89c;
+}
+.user-type{
+    background: #659906;
+    border: solid 1px #b1baa3;
+    border-radius: 200px;
+    color: #fff;
+    padding: 3px 10px 3px 10px;
+    font-size: 10px;
+}
+.admin-name {
+    position: relative;
+    margin-left: 60px;
+    color: silver;
+    height: 60px;
+}
+.body-content {
+    overflow-x: hidden;
+}
 .loader {
     border: 5px solid #f3f3f3; /* Light grey */
     border-top: 5px solid #3498db; /* Blue */
@@ -13,4 +112,25 @@
     100% { transform: rotate(360deg); }
 }
 
-/*# sourceMappingURL=style.css.map */
+.admin-dashboard {
+    background: #fafafa;
+    color: #383838;
+}
+
+.large-text {
+    font-size: 60px;
+}
+.db-action-btn {
+    background: #be4f63;
+    color: #fff;
+    border: none;
+    border: solid 1px #8e3b4a;
+    transition: all .25s ease-in-out;
+}
+.db-action-btn:hover {
+    background: #8d3a4a;
+    color: #fff;
+}
+.db-action-btn:focus{
+    outline: 0;
+}
