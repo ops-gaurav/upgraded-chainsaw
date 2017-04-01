@@ -34,6 +34,26 @@ router.post ('/add/:category', (req, res) => {
 });
 
 /**
+ * updating the category
+ */
+router.put ('/update/:id/:category', (req, res) => {
+    if (req.isAuthenticated()) {
+        if (req.user.doc.type == 'admin') {
+            Category.findOne ({_id: req.params.id}, (err, doc) => {
+                if (err) res.send (eRes ('Server error: '+ err));
+                else if (doc) {
+                    doc.name = req.params.category;
+
+                    doc.save().then (() => {
+                        res.send (sRes ('Updated'));
+                    });
+                } else res.send (eRes ('No data found'));
+            })
+        } else res.send ('Cannot access');
+    } else res.send (eRes ('Login first'));
+});
+
+/**
  * checks whether the sent category is unique or not
  */
 router.get ('/get/:category', (req, res) => {

@@ -19,7 +19,7 @@
                 <button class='btn btn-default btn-sm'>
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
-                <button class='btn btn-default btn-sm'>
+                <button class='btn btn-default btn-sm' ng-click='editCategory(category)'>
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </button>
             </p>
@@ -33,3 +33,26 @@
         </p>
     </section>
 </section>
+
+<div class="modal fade" id="category-edit-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Edit Category {{edit.name}}</h4>
+            </div>
+            <div class="modal-body">
+                <section class='form-group'>
+                    <label>Type new category name</label>
+                    <input ng-blur='lookupCategoryValidity()' ng-keyup='lookupCategoryValidity()' class='form-control' type='text' ng-value='edit.name' ng-model='edit.editedName' placeholder="Edit category name"/>
+                    <label ng-show = '!unique || !edit.editedName' class='label label-danger'>Cannot use this name</label>
+                    <label ng-show = 'unique && edit.editedName'class='label label-success'>Unique category identified</label>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button ng-disabled='!unique' type="button" class="btn btn-primary" ng-click='editCategoryRequest()'>Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

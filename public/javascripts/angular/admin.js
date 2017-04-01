@@ -534,7 +534,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 	}
 }]);
 
-app.controller ('CategoriesListController', ['$scope', '$http', function ($scope, $http) {
+app.controller ('CategoriesListController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
 	$scope.title = 'Shopping Categories';
 
 	$http.get ('/category/all'). then (function (d) {
@@ -552,8 +552,49 @@ app.controller ('CategoriesListController', ['$scope', '$http', function ($scope
 			$scope.nodata = true;
 		} 
 	}, function (d) {
-
+		console.error (JSON.stringify(d));
 	});
+
+	$scope.lookupCategoryValidity = function () {
+		$http.get ('/category/get/'+ $scope.edit.editedName).then (function (d) {
+			if (d.data.status == 'success')
+				$scope.unique = false;
+			else
+				$scope.unique = true;
+		}, function (d) {
+			console.error (JSON.stringify(d));
+			$scope.unique = false;
+		});
+	}
+
+	$scope.editCategory = function (category) {
+		$scope.edit = category;
+		showEditDialogue();
+		// alert('here');
+	}
+
+	// send a request to update  category
+	$scope.editCategoryRequest = function () {
+		$http.put ('/category/update/'+ $scope.edit._id+'/'+ $scope.edit.editedName). then (function (d) {
+			if (d.data.status == 'success') {
+				hideEditDialogue();
+				$state.transitionTo ('categories');
+			} else
+				console.error (d.data.message);
+		}, function (d) {
+			console.error (JSON.stringify (d));
+		});
+	}
+
+	function showEditDialogue () {
+		$('#category-edit-modal').modal ({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+	function hideEditDialogue () {
+		$('#category-edit-modal').modal ('hide');
+	}
 }]);
 
 app.controller ('NewCategoryController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
@@ -581,16 +622,6 @@ app.controller ('NewCategoryController', ['$scope', '$http', '$state', function 
 			console.error (JSON.stringify(d));
 			$scope.unique = false;
 		});
-	}
-
-	function showEditDialogue () {
-		$('#category-edit-modal').modal ({
-			backdrop: 'static',
-			keyboard: false
-		});
-	}
-	function hideEditDialogue () {
-		$('#category-edit-modal').modal ('hide');
 	}
 }]);
 
