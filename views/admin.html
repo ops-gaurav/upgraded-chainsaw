@@ -32,7 +32,7 @@
 
 		<script src='/chart.js/dist/Chart.min.js'></script>
 
-		<script src='javascripts/angular/admin.js' ></script>
+		<script src='/javascripts/angular/admin.js' ></script>
 		<link href='/stylesheets/style.css' rel='stylesheet' type='text/css'/>
 
 		<!-- for animations -->
@@ -41,7 +41,7 @@
 	<body>
 		<header>
 			<section class='menu-drawer'>
-				<button onclick="toggleDrawer ('appdrawer')" class='action-btn'><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>&nbsp; Control</button>
+				<button onclick="toggleDrawer ()" class='action-btn'><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>&nbsp; Control</button>
 				<img src='/images/logo.png' height=30 />
 			</section>
 		</header>
@@ -64,19 +64,19 @@
 
 				<section class='menu-container'>
 					<ul class="drawer-menu">
-						<li class="drawer-menu-item">
+						<li class="drawer-menu-item" ui-sref='admin' onclick="toggleDrawer ()">
 							<span class="glyphicon glyphicon-dashboard drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;DASHBOARD
 						</li>
-						<li class="drawer-menu-item">
+						<li class="drawer-menu-item" ui-sref='orders' onclick='toggleDrawer()'>
 							<span class="glyphicon glyphicon-file drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;ORDERS SUMMARY
 						</li>
-						<li class="drawer-menu-item">
+						<li class="drawer-menu-item" ui-sref='products' onclick='toggleDrawer()'>
 							<span class="glyphicon glyphicon-briefcase drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;PRODUCTS
 						</li>
-						<li class="drawer-menu-item">
+						<li class="drawer-menu-item" ui-sref='users' onclick='toggleDrawer()'>
 							<span class="glyphicon glyphicon-user drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;USERS
 						</li>
-						<li class="drawer-menu-item">
+						<li class="drawer-menu-item" ui-sref='categories' onclick='toggleDrawer()'>
 							<span class="glyphicon glyphicon-list-alt drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;CATEGORIES
 						</li>
 						<li class="drawer-menu-item" ng-click='logout()'>

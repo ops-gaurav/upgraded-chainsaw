@@ -18,8 +18,8 @@ router.post ('/add/:productId', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.params.productId) {
 
-            mongoose.Promise = es6Promise;
-            mongoose.connect (config.host, config.db);
+            // mongoose.Promise = es6Promise;
+            // mongoose.connect (config.host, config.db);
             
             // check if it is a valid product
             Product.findOne ({_id: req.params.productId}, (err, data) => {
@@ -34,7 +34,7 @@ router.post ('/add/:productId', (req, res) => {
 
                     order.save ().then (() => {
                         res.send ({status: 'success', message: 'Order placed'});
-                        mongoose.disconnect ();
+                        // mongoose.disconnect ();
                     });
                 } else
                     res.send ({status: 'error', message: 'product not available'});
@@ -45,14 +45,14 @@ router.post ('/add/:productId', (req, res) => {
 
 router.get ('/myorders', (req, res) => {
     if (req.isAuthenticated()) {
-        mongoose.Promise = es6Promise;
-        mongoose.connect (config.host, config.db);
+        // mongoose.Promise = es6Promise;
+        // mongoose.connect (config.host, config.db);
 
         Order.find ({_user: req.user.doc._id}).populate ('_product', '_id name price image').exec ((err, data) => {
             if (err) res.send ({status: 'error', message: err});
             else res.send ({status: 'success', data: data});
 
-            mongoose.disconnect ();
+            // mongoose.disconnect ();
         });
     } else res.send ({status: 'error', message: 'please login first to get your order details'});
 });
@@ -61,12 +61,12 @@ router.delete ('/remove/:id', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
             if (req.params.id) {
-                mongoose.Promise = es6Promise;
-                mongoose.connect (config.host, config.db);
+                // mongoose.Promise = es6Promise;
+                // mongoose.connect (config.host, config.db);
 
                 Order.remove ({_id: req.params.id}).then (() => {
                     res.send ({status: 'success', message: 'order deleted successfully'});
-                    mongoose.disconnect ();
+                    // mongoose.disconnect ();
                 });
             } else res.send ({status:'error', message: 'require order id to delete as params'});
         } else res.send ({status: 'error', message: 'Unauthorized access'});
@@ -80,14 +80,14 @@ router.delete ('/remove/:id', (req, res) => {
 router.get ('/populate', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
-            mongoose.Promise = es6Promise;
-            mongoose.connect (config.host, config.db);
+            // mongoose.Promise = es6Promise;
+            // mongoose.connect (config.host, config.db);
 
             Order.find ({}).populate('_user', 'phone username email').populate ('_product', "name price").exec ((err, data) => {
                 if (err) res.send ({status: 'error',message: err});
                 else res.send (data);
                 
-                mongoose.disconnect ();
+                // mongoose.disconnect ();
             });
         } else res.send ({status: 'error', message: 'Unauthorized access'});
     } else res.send ({status: 'error', message: 'Login first'});
@@ -96,14 +96,14 @@ router.get ('/populate', (req, res) => {
 router.get ('/multiPopulate', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
-            mongoose.Promise = es6Promise;
-            mongoose.connect (config.host, config.db);
+            // mongoose.Promise = es6Promise;
+            // mongoose.connect (config.host, config.db);
 
             Order.find ({}).populate ('_user').populate('_product').exec ((err, data) => {
                 if (err) res.send ({status:'error', message: 'server error: '+ err});
                 else res.send (data);
 
-                mongoose.disconnect ();
+                // mongoose.disconnect ();
             });
         } else res.send ({status: 'error', message: 'Unauthorized access'});
     } else res.send ({status: 'error', message: 'Login first'});

@@ -1,0 +1,35 @@
+<br/>
+<br/>
+<section class='container'>
+    <h3 class='page-header'>{{title}} 
+        <button class='btn btn-default' ui-sref='category-new'>
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+    </h3>
+    <p class='well well-sm'>
+        This page lets you see/create/delete the shopping categories in the website.
+    </p>
+    
+    <section class='row' ng-repeat='categoryRow in categoryBundle'>
+        <section class='col-md-3 ind-category' ng-repeat='category in categoryRow'>
+            <p class='text-center'>
+                {{category.name}}
+            </p>
+            <p class='text-center category-controls'>
+                <button class='btn btn-default btn-sm'>
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                <button class='btn btn-default btn-sm'>
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>
+            </p>
+        </section>
+    </section>
+
+    <section class='' ng-if='nodata'>
+        <p class='text-center'>
+            No categoried defined yet. 
+            <button class='btn btn-default btn-sm' ui-sref='category-new'>Create one right away.</button>
+        </p>
+    </section>
+</section>

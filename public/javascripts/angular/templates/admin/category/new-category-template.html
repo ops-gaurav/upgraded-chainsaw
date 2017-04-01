@@ -1,0 +1,26 @@
+<br/>
+<br/>
+<section class='container'>
+    <button class='btn btn-default btn-sm' ui-sref='categories'>
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp; Back
+    </button>
+    <hr/>
+    <h3 class='page-header'>{{title}}</h3>
+    <section class='row'>
+        <section class='col-md-3'></section>
+        <section class='col-md-6 centre-container'>
+            
+            <form class='form' name='newCategoryForm' ng-submit='createNewCategory()'>
+                <legend>Create a new category</legend>
+                <div class='form-group'>
+                    <label>Specify a new category</label>
+                    <input ng-blur='lookupCategoryValidity()' ng-keyup="lookupCategoryValidity()" type='text' name='category' ng-model='category' placeholder="Create new unique category" class='form-control' required/>
+                    <label ng-if='!unique' class='label label-danger'>Unique check failed</label>
+                    <label ng-if='unique' class='label label-success'>Unique check pass</label>
+                </div>
+                <p class='text-center'><button class='btn btn-primary' type='submit' ng-disabled='newCategoryForm.category.$invalidate'>Create</button></p>
+            </form>
+        </section>
+        <section class='col-md-3'></section>
+    </section>
+</section>

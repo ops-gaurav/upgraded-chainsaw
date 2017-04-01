@@ -28,8 +28,8 @@ passport.use ('PasswordAuth', new LocalStrategy ( {
 	passwordField: 'password'
 },( username, password, done) => {
 
-	mongoose.Promise = es6Promise;
-	mongoose.connect (config.host, config.db);
+	// mongoose.Promise = es6Promise;
+	// mongoose.connect (config.host, config.db);
 
 	User.findOne ({username: username}, (err, doc) => {
 		if (err) done (err);
@@ -56,7 +56,7 @@ passport.use ('PasswordAuth', new LocalStrategy ( {
 		else
 			done (null, false, { failureFlash: 'Username error' });
 	
-		mongoose.disconnect ();
+		// mongoose.disconnect ();
 	});
 }));
 
@@ -76,11 +76,17 @@ function eRes (message) {
 
 router.get ('/all', (req, res) => {
 	if (req.isAuthenticated ()) {
+
+		// mongoose.Promise = es6Promise;
+		// mongoose.connect (config.host, config.db);
+
 		User.find ({}, (err, doc) => {
 			if (err) res.send (eRes ('error:'+err))
 			else if (doc && doc.length > 0)
 				res.send (sRes (doc));
 			else res.send (eRes ('no data found'));
+
+			// mongoose.disconnect ();
 		})
 	}
 });
@@ -107,16 +113,16 @@ router.post ('/signup', (req, res) => {
     let data = req.body;
     console.log (data);
     if (data.username && data.password && data.phone && data.email && data.type) {
-		mongoose.Promise = es6Promise;
-		mongoose.connect (config.host, config.db);
+		// mongoose.Promise = es6Promise;
+		// mongoose.connect (config.host, config.db);
 		User.findOne ({username: data.username}, (err, doc) => {
 			if (err) {
 				res.send ({status: 'error', message: 'some error occurred: '+ err});
-				mongoose.disconnect ();
+				// mongoose.disconnect ();
 			}
 			else if (doc) {
 				res.send ({status: 'error', message: 'username already exists'});
-				mongoose.disconnect ();
+				// mongoose.disconnect ();
 			}
 			else {
 				var user = new User ({
@@ -129,7 +135,7 @@ router.post ('/signup', (req, res) => {
 
 				user.save ().then (() => {
 					res.send ({status: 'success', message: 'User created successfully', raw: user});
-					mongoose.disconnect ();
+					// mongoose.disconnect ();
 				});
 			}
 		})
@@ -140,8 +146,8 @@ router.post ('/signup', (req, res) => {
 
 router.get ('/usernameLookup/:username', (req, res) => {
 	if (req.params.username) {
-		mongoose.Promise = es6Promise;
-		mongoose.connect (config.host, config.db);
+		// mongoose.Promise = es6Promise;
+		// mongoose.connect (config.host, config.db);
 
 		User.findOne ({username: req.params.username}, (err, doc) => {
 			if (err) res.send (eRes ('Error: '+ err));
@@ -149,7 +155,7 @@ router.get ('/usernameLookup/:username', (req, res) => {
 				res.send (sRes('username found'))
 			 else res.send (eRes ('username not found'));
 
-			mongoose.disconnect();
+			// mongoose.disconnect();
 		});
 	}
 	else res.send (eRes ('no username provided'));
@@ -163,8 +169,8 @@ router.put ('/update/:id', (req, res) => {
 
 		if (req.params.id) {
 
-			mongoose.Promise = es6Promise;
-			mongoose.connect (config.host, config.db);
+			// mongoose.Promise = es6Promise;
+			// mongoose.connect (config.host, config.db);
 
 			User.findOne ({_id: req.params.id}, (err, doc) => {
 				if (err) res.send (eRes ('Server error: '+ err))
@@ -176,7 +182,7 @@ router.put ('/update/:id', (req, res) => {
 					doc.type = data.type;
 
 					doc.save (). then (() => {
-						mongoose.disconnect ();
+						// mongoose.disconnect ();
 						res.send ({status: 'success', message: 'authenticated', data: doc});
 					});
 				} else res.send (eRes ('No user found'));
@@ -189,14 +195,14 @@ router.delete ('/delete/:id', (req, res) => {
 	if (req.isAuthenticated()) {
 		if (req.user.doc.type == 'admin') {
 			if (req.params.id) {
-				mongoose.Promise = es6Promise;
-				mongoose.connect (config.host, config.db);
+				// mongoose.Promise = es6Promise;
+				// mongoose.connect (config.host, config.db);
 
 				User.remove ({_id: req.params.id}, (err) => {
 					if (err) res.send (eRes ('error deleting: '+ err));
 					else res.send (sRes ('deleted'));
 
-					mongoose.disconnect ();
+					// mongoose.disconnect ();
 				});
 			} else res.send (eRes ('Id not sent'));
 		} else res.send (eRes ('You need to be admin'));
@@ -207,13 +213,13 @@ router.put ('/addImage/:id', (req, res) => {
 	upload (req, res, (err) => {
         if (err) res.send ({status: 'error', message: 'error uploading: '+ err});
         else {
-            mongoose.Promise = es6Promise;
-            mongoose.connect (config.host, config.db);
+            // mongoose.Promise = es6Promise;
+            // mongoose.connect (config.host, config.db);
 
             User.findOne ({_id: req.params.id}, (err, data) => {
                 if (err) {
 					res.send ({status: 'error', message: 'Error: '+ err});
-					mongoose.disconnect();
+					// mongoose.disconnect();
                 } else if (data) {
                     data.image = {
                         mime: req.image.mimetype.replace ('/', '-'),
@@ -222,11 +228,11 @@ router.put ('/addImage/:id', (req, res) => {
 
                     data.save (). then (() => {
                         res.send ({status: 'success', data: data});
-                        mongoose.disconnect ();
+                        // mongoose.disconnect ();
                     });
                 } else { 
 					res.send ({status: 'error', message: 'no data'});
-					mongoose.disconnect ();
+					// mongoose.disconnect ();
 				}
             });
         }

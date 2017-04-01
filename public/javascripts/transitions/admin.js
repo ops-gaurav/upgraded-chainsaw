@@ -2,18 +2,19 @@
  * all the transitions related to admin.js page
  */
 
+var id = 'appdrawer'
 var drawer = {showing: false, rate: 300};
 
 function toggleDrawer (drawerId) {
     if (drawer.showing) {
-        $('#'+ drawerId).animate ({width: 0+'px'}, drawer.rate, () => {
+        $('#'+ id).animate ({width: 0+'px'}, drawer.rate, () => {
             drawer.showing = false;
-            $('#'+ drawerId).css ('display', 'none');
+            $('#'+ id).css ('display', 'none');
         });
         // $('#body-content').animate ({marginLeft: '0px'}, drawer.rate);
     } else {
-        $('#'+ drawerId).css ('display', 'block');
-        $('#'+ drawerId).animate ({width: 300+'px'}, drawer.rate, () => {
+        $('#'+ id).css ('display', 'block');
+        $('#'+ id).animate ({width: 300+'px'}, drawer.rate, () => {
             drawer.showing = true;
         });
 

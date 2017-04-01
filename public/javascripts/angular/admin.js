@@ -1,32 +1,98 @@
 var app = angular.module ('admin', ['ui.router', 'ngFileUpload', 'ngMask']);
 
+// app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
+
+// 	$stateProvider	
+// 		.state ('dashboard', {
+// 			url: '/admin',
+// 			views: {
+// 				'': {
+// 					templateUrl: '/javascripts/angular/templates/admin/admin-template-refined.html',
+// 					controller: 'AdminController'
+// 				},
+				
+// 				'ordersList@dashboard' :{
+// 					templateUrl: '/javascripts/angular/templates/admin/orders-list-template.html',
+// 					controller: 'OrdersListController'
+// 				},
+				
+// 				'usersList@dashboard': {
+// 					templateUrl: '/javascripts/angular/templates/admin/users-list-template.html',
+// 					controller: 'UsersListController'
+// 				},
+
+// 				'productsList@dashboard': {
+// 					templateUrl: '/javascripts/angular/templates/admin/products-list-template.html',
+// 					controller: 'ProductsListController'
+// 				}
+// 			}
+// 		});
+
+// 		$urlRouterProvider.otherwise ('/admin');
+
+// 	$locationProvider.html5Mode ({
+// 		enabled: true,
+// 		requireBase: false
+// 	});
+// }]);
+
 app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
-	$stateProvider	
-		.state ('dashboard', {
-			url: '/admin',
-			views: {
-				'': {
-					templateUrl: '/javascripts/angular/templates/admin/admin-template-refined.html',
-					controller: 'AdminController'
-				},
+	$stateProvider
+		// .state ('dashboard', {
+		// 	url: '/admin',
+		// 	views: {
+		// 		'': {
+		// 			templateUrl: '/javascripts/angular/templates/admin/admin-template-refined.html',
+		// 			controller: 'AdminController'
+		// 		},
 				
-				'ordersList@dashboard' :{
-					templateUrl: '/javascripts/angular/templates/admin/orders-list-template.html',
-					controller: 'OrdersListController'
-				},
+		// 		'ordersList@dashboard' :{
+		// 			templateUrl: '/javascripts/angular/templates/admin/orders-list-template.html',
+		// 			controller: 'OrdersListController'
+		// 		},
 				
-				'usersList@dashboard': {
-					templateUrl: '/javascripts/angular/templates/admin/users-list-template.html',
-					controller: 'UsersListController'
-				},
+		// 		'usersList@dashboard': {
+		// 			templateUrl: '/javascripts/angular/templates/admin/users-list-template.html',
+		// 			controller: 'UsersListController'
+		// 		},
 
-				'productsList@dashboard': {
-					templateUrl: '/javascripts/angular/templates/admin/products-list-template.html',
-					controller: 'ProductsListController'
-				}
-			}
-		});
+		// 		'productsList@dashboard': {
+		// 			templateUrl: '/javascripts/angular/templates/admin/products-list-template.html',
+		// 			controller: 'ProductsListController'
+		// 		}
+		// 	}
+		// })
+		.state ('orders', {
+			url: '/admin/orders',
+			templateUrl: '/javascripts/angular/templates/admin/orders-list-template.html',
+			controller: 'OrdersListController'
+		})
+		.state ('admin', {
+			url: '/admin', 
+			templateUrl: '/javascripts/angular/templates/admin/admin-template-refined.html',
+			controller: 'AdminController'
+		})
+		.state ('products', {
+			url: '/admin/products',
+			templateUrl: '/javascripts/angular/templates/admin/products-list-template.html',
+			controller: 'ProductsListController'
+		})
+		.state ('users', {
+			url: '/admin/users',
+			templateUrl: '/javascripts/angular/templates/admin/users-list-template.html',
+			controller: 'UsersListController'
+		})
+		.state ('categories', {
+			url: '/admin/categories',
+			templateUrl: '/javascripts/angular/templates/admin/categories-list-template.html',
+			controller: 'CategoriesListController'
+		})
+		.state ('category-new', {
+			url: '/admin/categories/createnew',
+			templateUrl: '/admin/category/new-category-template.html',
+			controller: 'NewCategoryController'
+		})
 
 		$urlRouterProvider.otherwise ('/admin');
 
@@ -111,7 +177,7 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 	$scope.rawData = [];
 	// call one after another
 	// call after all the orders have been loaded
-	$rootScope.fetchUsers = function () {
+	$scope.fetchUsers = function () {
 		console.log ('fetching users');
 		$http.get ('/user/all').then (function (data) {
 			if (data.data.status =='success') {
@@ -128,7 +194,7 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 		});
 	}
 
-	$rootScope.fetchUsers();
+	$scope.fetchUsers();
 
 	$scope.filterUser = function (userType) {
 		$scope.selectedUser = 'All';
@@ -313,7 +379,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 		$scope.selectedCategory = category;
 	}
 
-	$rootScope.fetchProducts = function () {
+	$scope.fetchProducts = function () {
 		console.log ('fetching products');
 		$http.get ('/product/all').then (function(d){
 			if (d.data.status == 'success') {
@@ -330,6 +396,8 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 				console.error (JSON.stringify (d));
 		});
 	}
+
+	$scope.fetchProducts();
 
 	// filter items by category
 	$scope.fetchCategory = function (category) {
@@ -463,6 +531,66 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 			console.error (JSON.stringify(d));
 			hideDeleteModal();
 		});
+	}
+}]);
+
+app.controller ('CategoriesListController', ['$scope', '$http', function ($scope, $http) {
+	$scope.title = 'Shopping Categories';
+
+	$http.get ('/category/all'). then (function (d) {
+		if (d.data.status == 'success') {
+			var responseData = d.data.message;
+			$scope.categoryBundle = [];
+			for (var i=0; i<responseData.length; i++) {
+				var categoryRow = [];
+				for (var j=i; j< i+4 && j < responseData.length; j++, i++) 
+					categoryRow.push (responseData[j]);
+				$scope.categoryBundle.push (categoryRow);
+			} 
+			console.log ($scope.categoryBundle);
+		} else {
+			$scope.nodata = true;
+		} 
+	}, function (d) {
+
+	});
+}]);
+
+app.controller ('NewCategoryController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
+	$scope.title = 'Create new shopping category';
+
+	$scope.lookupCategoryValidity = function () {
+		$http.get ('/category/get/'+ $scope.category).then (function (d) {
+			if (d.data.status == 'success')
+				$scope.unique = false;
+			else
+				$scope.unique = true;
+		}, function (d) {
+			console.error (JSON.stringify(d));
+			$scope.unique = false;
+		});
+	}
+
+	$scope.createNewCategory = function (){
+		$http.post ('/category/add/'+ $scope.category).then (function (d) {
+			if (d.data.status == 'success')
+				$state.transitionTo ('categories');
+			else
+				console.log (d.data.message);
+		}, function (d) {
+			console.error (JSON.stringify(d));
+			$scope.unique = false;
+		});
+	}
+
+	function showEditDialogue () {
+		$('#category-edit-modal').modal ({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+	function hideEditDialogue () {
+		$('#category-edit-modal').modal ('hide');
 	}
 }]);
 

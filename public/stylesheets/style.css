@@ -64,6 +64,9 @@ header {
     transition: all .25s ease-in-out;
     font-weight: normal;
 }
+.drawer-menu-item.active {
+    color: yellow;
+}
 .drawer-menu-item:hover {
     color: yellow;
 }
@@ -133,4 +136,27 @@ header {
 }
 .db-action-btn:focus{
     outline: 0;
+}
+.centre-container {
+    border: solid 1px #f0f0f0;
+    padding: 20px;
+    border-radius: 3px;
+}
+
+.ind-category {
+    box-shadow: solid 1px silver;
+    border-radius: 3px;
+    padding: 20px;
+    box-shadow: 0px 0px 5px 1px silver;
+    cursor: pointer;
+    transition: all .25s ease-in-out;
+}
+.ind-category:hover {
+    box-shadow: 0px 0px 10px 1px grey;
+}
+.category-controls {
+    transition: all .25s ease-in-out;
+}
+.ind-category:hover .category-controls {
+    display: block;
 }

@@ -14,6 +14,7 @@ import index from './routes/index';
 import user from './routes/user-router';
 import order from './routes/orders-router';
 import product from './routes/products-router';
+import category from './routes/category_router';
 
 const app = express();
 const debug = Debug('shop:app');
@@ -38,10 +39,13 @@ app.use (flash ());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use (express.static (path.join (__dirname, 'bower_components')));
+// path to angular templates
+app.use (express.static (path.join (__dirname, 'public/javascripts/angular/templates')));
 
 app.use ('/', index);
 app.use ('/user', user);
 app.use ('/order', order);
 app.use ('/product', product);
+app.use ('/category', category);
 
 export default app;
