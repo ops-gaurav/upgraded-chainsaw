@@ -7,7 +7,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
             url: '/user',
             views: {
                 '': {
-                    templateUrl: '/javascripts/angular/templates/user/user-template.html',
+                    templateUrl: '/javascripts/angular/templates/user/user-template-refined.html',
                     controller: 'UserController'
                 },
 
@@ -21,6 +21,11 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
                     controller: 'OrdersListController'
                 }
             }
+        })
+        .state ('edit', {
+            url: '/user/edit',
+            templateUrl: '/user/edit-user-template.html',
+            controller: 'EditUserController'
         });
 
     $urlRouterProvider.otherwise ('/user');
@@ -110,6 +115,10 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
             console.log (JSON.stringify(data));
         });
     }
+}]);
+
+app.controller ('EditUserController', ['$scope','$rootScope', '$http', function ($scope, $rootScope, $http) {
+    $scope.title ='Edit user information'; 
 }]);
 
 /**

@@ -1,0 +1,61 @@
+<br/>
+<section class='container admin-dashboard'>
+    <h2 class='page-header'>Hello {{sessionInfo.username | uppercase}}</h2>
+    welcome aboard !
+    <br/>
+    <br>
+    The following table shows the whole website statistics
+    <section class='row text-center'>
+        <section class='col-md-4'>
+            
+            <div class="panel panel-default">
+                <div class='panel-heading'>
+                    Your User Stats
+                </div>
+                <div class="panel-body">
+                   Currently <p class='large-text'>64</p> USERS
+                </div>
+                <div class="panel-footer">
+                    Control users from 
+                    <button class='btn db-action-btn'>
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                         Users control panel
+                    </button>
+                </div>
+            </div>
+        </section>
+        <section class='col-md-4'>
+            
+            <div class="panel panel-default">
+                <div class='panel-heading'>
+                    Your Product Stats
+                </div>
+                <div class="panel-body">
+                   <p class='large-text'>897</p>
+                   PRODUCTS
+                </div>
+                <div class="panel-footer">
+                    Quickly get started by adding <button class='btn db-action-btn'> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>&nbsp;new product</button>
+                </div>
+            </div>
+        </section>
+        <section class='col-md-4'>
+            
+            <div class="panel panel-default">
+                <div class='panel-heading'>
+                    Order Stats
+                </div>
+                <div class="panel-body text-center">
+                   Currently <p class='large-text'>102</p> ORDERS processed
+                </div>
+                <div class='panel-footer'>
+                    See full orders summary  
+                    <button class='btn db-action-btn'>
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                         Here
+                    </button>
+                </div>
+            </div>
+        </section>
+    </section>
+</section>

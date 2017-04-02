@@ -1,0 +1,37 @@
+<br/>
+<br/>
+<section class='container'>
+    <button class='btn btn-default btn-sm' ui-sref='products'>
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp; Back
+    </button>
+    <hr/>
+    <h3 class='page-header'>{{title}}</h3>
+    <section class='row'>
+        <section class='col-md-3'></section>
+        <section class='col-md-6 centre-container'>
+            <form name='newProductForm' class='form'>
+                <legend>Provide product details</legend>
+                <div class='form-group'>
+                    <input class='form-control' name='productName' ng-model='pName' type='text' placeholder='Product name' required/>
+                    <label ng-show='newProductForm.productName.$invalid' class='label label-danger'>Reequired product name</label>
+                </div>
+                <div class='form-group'>
+                    <input class='form-control' name='productPrice' ng-model='pPrice' type='number' placeholder="price" required/>
+                    <label ng-show='newProductForm.productPrice.$invalid' class='label label-danger'>Reequired product price</label>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Category: {{selectedCategory}}
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat='category in productCategories' ng-click='changeCategory (category)'>
+                            <a href="#">{{category}}</a>   
+                        </li>
+                    </ul>
+                </div>
+
+                <button type="button" class="btn btn-primary" ng-disabled='newProductForm.$invalid' ng-click='createProductRequest()'>Create product</button>
+            </form>
+        </section>
+        <section class='col-md-3'></section>
+    </section>
+</section>

@@ -16,27 +16,22 @@
 		<!-- AngularJS JS <1></1>.5.7 -->
 		<script src='/angular/angular.min.js'></script>
 		<script src='/angular-ui-router/release/angular-ui-router.min.js'></script>
+		
 		<script src='/angular-resource/angular-resource.min.js'></script>
 
 		<!-- ngMask dependency from bower -->
-		<script src='/ngMask/dist/ngMask.min.js' ></script>
 		<script src='/ngMask/dist/ngMask.min.js' ></script>
 
 		<!-- bower ng-file include dependency -->
 		<script src='/ng-file-upload/ng-file-upload-shim.min.js'></script>
 		<script src='/ng-file-upload/ng-file-upload.min.js'></script>
 
-		<!-- for graphs -->
-		<!-- deprecating becuse not responsive -->
-		<!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
-
-		<script src='/chart.js/dist/Chart.min.js'></script>
 
 		<script src='/javascripts/angular/admin.js' ></script>
 		<link href='/stylesheets/style.css' rel='stylesheet' type='text/css'/>
 
 		<!-- for animations -->
-		<script src='/javascripts/transitions/admin.js'></script>
+		<script src='/javascripts/transitions/animations.js'></script>
 	</head>
 	<body>
 		<header>
@@ -58,7 +53,6 @@
 							<a class='email'>{{sessionInfo.email}}</a><br/>
 							<a class='user-type'>ADMIN</a>
 						</p>
-						
 					</section>
 				</section>
 
@@ -85,7 +79,6 @@
 					</ul>
 				</section>
 			</section>
-			
 		</section>
 
 		<section id= 'body-content' ui-view></section>

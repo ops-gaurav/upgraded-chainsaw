@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<a class='btn btn-success btn-sm' ng-click='newProductModal()'> + Add new product</a>
+					<a class='btn btn-success btn-sm'  ui-sref='product-new'> + Add new product</a>
 				</div>
 			</form>
 		</div>
@@ -38,7 +38,7 @@
 						<td>
 							<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, product._id)'>
 								<p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
-								<p ng-hide='product.image'><img class='{{product._id}}' src='images/product.png'  width=40 /><p>
+								<p ng-hide='product.image'><img class='{{product._id}}' src='/images/product.png'  width=40 /><p>
 							</a>
 						</td>
 						<td>{{product.name}}</td>
@@ -55,14 +55,14 @@
 		<div class='panel-footer'>
 		</div>
 
-		<div class="modal fade" id="new-product-modal">
+		<!--<div class="modal fade" id="new-product-modal">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title">Add new product</h4>
 					</div>
-					<div class="modal-body">	
+					<div class="modal-body">
 						<input class='form-control' ng-model='pName' type='text' placeholder='Product name'/> <br/>
 						<input class='form-control' ng-model='pPrice' type='number' placeholder="price" />
 						<br/>
@@ -82,7 +82,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>-->
 
 		<div class="modal fade" id="edit-product-modal">
 			<div class="modal-dialog">
@@ -121,7 +121,7 @@
 						<h4 class="modal-title">Delete product</h4>
 					</div>
 					<div class="modal-body">
-						Are you sure to delete {{edit.name}} from products?
+						Are you sure to delete &quot;<em><b>{{edit.name}}</b></em>&quot; from products?
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Nope</button>

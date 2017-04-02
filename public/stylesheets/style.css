@@ -96,7 +96,7 @@ header {
     position: relative;
     margin-left: 60px;
     color: silver;
-    height: 60px;
+    min-height: 60px;
 }
 .body-content {
     overflow-x: hidden;

@@ -1,68 +1,8 @@
 var app = angular.module ('admin', ['ui.router', 'ngFileUpload', 'ngMask']);
 
-// app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
-
-// 	$stateProvider	
-// 		.state ('dashboard', {
-// 			url: '/admin',
-// 			views: {
-// 				'': {
-// 					templateUrl: '/javascripts/angular/templates/admin/admin-template-refined.html',
-// 					controller: 'AdminController'
-// 				},
-				
-// 				'ordersList@dashboard' :{
-// 					templateUrl: '/javascripts/angular/templates/admin/orders-list-template.html',
-// 					controller: 'OrdersListController'
-// 				},
-				
-// 				'usersList@dashboard': {
-// 					templateUrl: '/javascripts/angular/templates/admin/users-list-template.html',
-// 					controller: 'UsersListController'
-// 				},
-
-// 				'productsList@dashboard': {
-// 					templateUrl: '/javascripts/angular/templates/admin/products-list-template.html',
-// 					controller: 'ProductsListController'
-// 				}
-// 			}
-// 		});
-
-// 		$urlRouterProvider.otherwise ('/admin');
-
-// 	$locationProvider.html5Mode ({
-// 		enabled: true,
-// 		requireBase: false
-// 	});
-// }]);
-
 app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
 	$stateProvider
-		// .state ('dashboard', {
-		// 	url: '/admin',
-		// 	views: {
-		// 		'': {
-		// 			templateUrl: '/javascripts/angular/templates/admin/admin-template-refined.html',
-		// 			controller: 'AdminController'
-		// 		},
-				
-		// 		'ordersList@dashboard' :{
-		// 			templateUrl: '/javascripts/angular/templates/admin/orders-list-template.html',
-		// 			controller: 'OrdersListController'
-		// 		},
-				
-		// 		'usersList@dashboard': {
-		// 			templateUrl: '/javascripts/angular/templates/admin/users-list-template.html',
-		// 			controller: 'UsersListController'
-		// 		},
-
-		// 		'productsList@dashboard': {
-		// 			templateUrl: '/javascripts/angular/templates/admin/products-list-template.html',
-		// 			controller: 'ProductsListController'
-		// 		}
-		// 	}
-		// })
 		.state ('orders', {
 			url: '/admin/orders',
 			templateUrl: '/javascripts/angular/templates/admin/orders-list-template.html',
@@ -92,6 +32,11 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 			url: '/admin/categories/createnew',
 			templateUrl: '/admin/category/new-category-template.html',
 			controller: 'NewCategoryController'
+		})
+		.state ('product-new', {
+			url: '/admin/product/new',
+			templateUrl: '/admin/products/new-product-template.html',
+			controller: 'NewProductController'
 		})
 
 		$urlRouterProvider.otherwise ('/admin');
@@ -187,10 +132,10 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 			} else
 				console.log (data.data.message);
 
-			$rootScope.fetchProducts();
+			// $rootScope.fetchProducts();
 		}, function (data) {
 			console.error (JSON.stringify (data));
-			$rootScope.fetchProducts();
+			// $rootScope.fetchProducts();
 		});
 	}
 
@@ -362,7 +307,18 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 
 app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upload', function ($scope, $rootScope, $http, Upload) {
 	$scope.title = 'All products';
-	$scope.productCategories = [ 'Accessory', 'Electronics' , 'Art', 'Sports'];
+	// $scope.productCategories = [ 'Accessory', 'Electronics' , 'Art', 'Sports'];
+	$scope.productCategories = [];
+
+	$http.get ('/category/all'). then (function (d) {
+		if (d.data.status == 'success') {
+			var response = d.data.message;
+			response.forEach (item => $scope.productCategories.push (item.name));
+		} else
+			$scope.productCategories.push ('Accessory');
+	}, function (d) {
+		
+	});
 	$scope.selectedCategory = 'All';
 
 	$scope.rawData = [];
@@ -534,6 +490,52 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 	}
 }]);
 
+app.controller ('NewProductController', ['$scope',  '$http', '$log', '$state', function ($scope, $http, $log, $state) {
+	$scope.title ='New product';
+
+	$scope.changeCategory = function (category){
+		$scope.selectedCategory = category;
+	}
+
+	// fetch all the categories to be available under the dropdown
+	$http.get ('/category/all'). then (function (d) {
+		if (d.data.status == 'success') {
+			var response = d.data.message;
+			$scope.productCategories = [];
+			if (response && response.length > 0)  response.forEach (item => $scope.productCategories.push (item.name));
+			 else $scope.productCategories.push ('Accessory');
+			
+			// set the default category item
+			$scope.selectedCategory = $scope.productCategories[0];
+		} else $log.error (d.data.message);
+	}, function (d) {
+		if (d.status == 500)
+			$log.error ('Server errr');
+		else
+			$log.error (JSON.stringify (d));
+	}); 
+
+	$scope.createProductRequest = function () {
+		console.log ($scope.pName+ '\t'+ $scope.pPrice +'\t'+ $scope.selectedCategory);
+		var payload = {
+			name: $scope.pName,
+			price: $scope.pPrice,
+			category: $scope.selectedCategory
+		};
+
+		$http.post ('/product/add', payload). then (function (d) {
+			if (d.data.status == 'success')
+				$state.transitionTo ('products');
+			else
+				$log.error (d.data.message);
+		}, function (d) {
+			if (d.status == 500) $log.error ('Server error');
+			else $log.error (JSON.stringify (d));
+
+		});
+	}
+}]);
+
 app.controller ('CategoriesListController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
 	$scope.title = 'Shopping Categories';
 
@@ -578,7 +580,25 @@ app.controller ('CategoriesListController', ['$scope', '$http', '$state', functi
 		$http.put ('/category/update/'+ $scope.edit._id+'/'+ $scope.edit.editedName). then (function (d) {
 			if (d.data.status == 'success') {
 				hideEditDialogue();
-				$state.transitionTo ('categories');
+				// $state.transitionTo ('categories');
+				// update the $scope.categoryBundle to find the object with id $scope.edit._id
+
+				var breakWhole = true;
+				for (var i=0; i< $scope.categoryBundle.length; i++) {
+					var categoryRow = $scope.categoryBundle [i];
+					for (var j=0; j<categoryRow.length; j++) {
+						var current = categoryRow[j];
+						if (current._id == $scope.edit._id) {
+							 current.name = $scope.edit.editedName;
+							 breakWhole = true;
+							 break;
+						}
+						categoryRow[j] = current;
+					}
+					$scope.categoryBundle[i] = categoryRow;
+					if (breakWhole)
+						break;
+				}
 			} else
 				console.error (d.data.message);
 		}, function (d) {
