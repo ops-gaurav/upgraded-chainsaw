@@ -92,8 +92,9 @@ router.get ('/all', (req, res) => {
 });
 
 router.get ('/sessioninfo', (req, res) => {
-	if (req.isAuthenticated())
+	if (req.isAuthenticated()) {
 		res.send (sRes (req.user));
+	}
 	else
 		res.send (eRes ('User not authenticated'));
 });
@@ -183,7 +184,11 @@ router.put ('/update/:id', (req, res) => {
 
 					doc.save (). then (() => {
 						// mongoose.disconnect ();
-						res.send ({status: 'success', message: 'authenticated', data: doc});
+						// UPDATE PASSORT SESSION VALUE HERE
+						req.login (doc, err => {
+							if (err) res.send (eRes ('Error loagging in'));
+							else res.send (sRes ('updated'));
+						});
 					});
 				} else res.send (eRes ('No user found'));
 			})

@@ -1,9 +1,10 @@
-<div class="panel panel-success">
-    <div class='panel-heading'>
-        <h4>{{pageTitle}}</h4>
-    </div>
-    <div class="panel-body">
-       <table class='table table-striped'>
+<br/>
+<br/>
+<section class='container'>
+    <h3 class='page-header'>{{pageTitle}}</h3>
+
+    <section class='table-reponsive'>
+        <table class='table table-striped'>
             <thead>
                 <tr>
                     <td></td>
@@ -15,12 +16,12 @@
                 <tr ng-repeat='order in orders'>
                     <td>
                         <p class='text-center' ng-if='order._product.image'><img class='{{order._product._id}}' ng-src='/product/image/{{order._product.image.value}}/{{order._product.image.mime}}'  height=40 /><p>
-						<p class='text-center' ng-hide='order._product.image'><img class='{{order._product._id}}' src='images/product.png'  width=40 /><p>
+                        <p class='text-center' ng-hide='order._product.image'><img class='{{order._product._id}}' src='images/product.png'  width=40 /><p>
                     </td>
                     <td>{{order._product.name}}</td>
                     <td>{{order._product.price | currency:"&#8377;"}}</td>
                 </tr>
             </tbody>
         </table>
-    </div>
-</div>
+    </section>
+</section>

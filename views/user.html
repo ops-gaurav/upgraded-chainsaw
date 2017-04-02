@@ -30,37 +30,6 @@
 	<body>
 		
 		<header>
-			<!--<nav class="navbar navbar-default" role="navigation">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="#">shop</a>
-				</div>
-			
-				<div class="collapse navbar-collapse navbar-ex1-collapse">
-					<ul class="nav navbar-nav navbar-right">
-						<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, sessionInfo._id)'>
-							<img ng-if='sessionInfo.image && !newImage' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
-							<img ng-hide='sessionInfo.image' class='{{sessionInfo._id}} img-circle' src='images/profile.png'  width=40 />
-							<img ng-if='newImage' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
-						</a>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								{{sessionInfo.username}} <b class="caret"></b>
-							</a>
-							<ul class="dropdown-menu">
-								<li><a href ng-click="logout()">Logout</a></li>
-								<li><a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, sessionInfo._id)'>Change profile pic</a></li>
-								<li><a href ng-click='showEditDialogue()'>Update information</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</nav>-->
 			<section class='menu-drawer'>
 				<button onclick="toggleDrawer ()" class='action-btn'><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>&nbsp; Control</button>
 				<img src='/images/logo.png' height=30 />
@@ -74,7 +43,7 @@
 				
 				<section class='admin-info'>
 					<img ng-if='sessionInfo.image && !newImage' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
-					<img ng-hide='sessionInfo.image' class='{{sessionInfo._id}} img-circle' src='images/profile.png'  width=40 />
+					<img ng-hide='sessionInfo.image' class='{{sessionInfo._id}} img-circle' src='/images/profile.png'  width=40 />
 					<img ng-if='newImage' class='{{sessionInfo._id}} img-circle' ng-src='/user/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=40 width=40 />
 					<section class='admin-name'>
 						<p class='name'>
@@ -87,17 +56,20 @@
 
 				<section class='menu-container'>
 					<ul class="drawer-menu">
-						<li class="drawer-menu-item" ui-sref='admin' onclick="toggleDrawer ()">
+						<li class="drawer-menu-item" ui-sref='user' onclick="toggleDrawer ()">
 							<span class="glyphicon glyphicon-home drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;HOME
 						</li>
-						<li class="drawer-menu-item" ui-sref='orders' onclick='toggleDrawer()'>
+						<li class="drawer-menu-item" ui-sref='edit' onclick='toggleDrawer()'>
 							<span class="glyphicon glyphicon-user drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;EDIT PROFILE
 						</li>
-						<li class="drawer-menu-item" ui-sref='products' onclick='toggleDrawer()'>
+						<li class="drawer-menu-item" ui-sref='orders' onclick='toggleDrawer()'>
 							<span class="glyphicon glyphicon-briefcase drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;MY ORDERS
 						</li>
 						<li class="drawer-menu-item" ui-sref='categories' onclick='toggleDrawer()'>
 							<span class="glyphicon glyphicon-gift drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;WISH LIST
+						</li>
+						<li class="drawer-menu-item" ui-sref='categories' onclick='toggleDrawer()'>
+							<span class="glyphicon glyphicon-gift drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;ADDRESSES
 						</li>
 						<li class="drawer-menu-item" ng-click='logout()'>
 							<span class="glyphicon glyphicon-lock drawer-icon" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;LOGOUT
@@ -110,34 +82,5 @@
 		<section id='body-content' ui-view></section>
 
 		<footer></footer>
-
-		<!--<div class="modal fade" id="edit-user-modal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Edit user</h4>
-						You can only update your email and phone number
-					</div>
-					<form name='editForm' ng-submit="updateUserRequest ()">
-						<div class="modal-body">
-							<section class='form-group'>
-								<label>Phone number</label>
-								<input class='form-control' ng-value='sessionInfo.phone' ng-model='edit.phone' ng-model='edit.phone' name = 'editPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
-							</section>
-							<section class='form-group'>
-								<label>Email id</label>
-								<input class='form-control' name='editEmail' ng-value='sessionInfo.email' ng-model='edit.email' type='email' placeholder='Edit email' required/> 
-								<label ng-show='editForm.editEmail.$invalid' class='label label-danger'>Email invalid</label>
-							</section>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
-							<button ng-disabled ='editForm.$invalid' type="submit" class="btn btn-primary">Update</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>-->
 	</body>
 </html>

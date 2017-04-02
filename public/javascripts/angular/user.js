@@ -7,7 +7,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
             url: '/user',
             views: {
                 '': {
-                    templateUrl: '/javascripts/angular/templates/user/user-template-refined.html',
+                    templateUrl: '/javascripts/angular/templates/user/user-template.html',
                     controller: 'UserController'
                 },
 
@@ -21,6 +21,11 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
                     controller: 'OrdersListController'
                 }
             }
+        })
+        .state ('orders', {
+            url: '/user/orders',
+            templateUrl: '/user/orders-list-template.html',
+            controller: 'OrdersListController'
         })
         .state ('edit', {
             url: '/user/edit',
@@ -37,7 +42,20 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 
 app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$log', function ($scope, $rootScope, $http, $log) {
     $scope.pageTitle = 'We have following products for you to shop today';
-    $scope.productCategories = [ 'Electronics' , 'Art', 'Sports' ];
+    $scope.productCategories = [];
+    $scope.selectedFilter = 'All';
+
+    $http.get ('/category/all').then (function (d) {
+        if (d.data.status == 'success') {
+            var response = d.data.message;
+            response.forEach (item => $scope.productCategories.push (item.name));
+        } else {
+            $log.info (d.data.message);
+        }
+    }, function (d) {
+        if (d.status == 500) $log.error ('Server error');
+        else $log.error (JSON.stringify (d));
+    });
 
     $scope.rawData = [];
 
@@ -51,20 +69,17 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
             }
             else
                 $log.log ('response error: '+ d.data.message);
-
-            $rootScope.fetchOrders();
         }, function(d){
             if (d.status == 500)
                 $log.error ('server error');
             else 
                 $log.log (JSON.stringify (d));
-
-            $rootScope.fetchOrders();
         });
     };
 
     $scope.fetchCategory = function (category) {
         // filter existing data instead of fetching new
+        $scope.selectedFilter = category;
         var _productsAlias = [];
         for (var i=0; i<$scope.rawData.length;i++) {
             var  p =$scope.rawData[i];
@@ -85,10 +100,18 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
 
     $scope.fetchProducts();
 
+    function showPurchaseSuccess () {
+        $('#purchase-success').modal ({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
     $scope.buyItem = function (pId) {
         $http.post ('/order/add/'+ pId). then (function (d) {
-            if (d.data.status == 'success')
-                $rootScope.fetchOrders();
+            if (d.data.status == 'success') {
+                showPurchaseSuccess ();
+            }
             else
                 console.log (d.data.message);
         }, function (d){ 
@@ -103,7 +126,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
 app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
     $scope.pageTitle = 'Your recent orders';
 
-    $rootScope.fetchOrders = function () {
+    $scope.fetchOrders = function () {
         $http.get ('/order/myorders').then (function (data){
             if (data.data.status == 'success' ) {
                 $scope.orders = data.data.data;
@@ -115,26 +138,60 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
             console.log (JSON.stringify(data));
         });
     }
+
+    $scope.fetchOrders();
 }]);
 
-app.controller ('EditUserController', ['$scope','$rootScope', '$http', function ($scope, $rootScope, $http) {
+app.controller ('EditUserController', ['$scope','$rootScope', '$http', '$log' ,'$state', function ($scope, $rootScope, $http, $log, $state) {
     $scope.title ='Edit user information'; 
+
+    $scope.editUserRequest = function () {
+        var payload = {
+            username: $rootScope.sessionInfo.username,
+            password: $rootScope.sessionInfo.password,
+            phone: $scope.edit.phone,
+            email: $scope.edit.email,
+            type: $rootScope.sessionInfo.type
+        }
+
+        $http.put ('/user/update/'+ $rootScope.sessionInfo._id, payload).then (function (d) {
+            if (d.data.status == 'success') {
+                $log.info ('Updated information');
+
+                $rootScope.fetchSessionInfo ();
+
+                $state.transitionTo ('user');
+            } else
+                $log.info (d.data.message);
+        }, function (d) {
+            if (d.status == 500) $log.error ('server error');
+            else $log.error (JSON.stringify (d));
+        });
+    }
 }]);
 
 /**
  * the default controller
  */
 app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$window', 'Upload', function ($scope, $rootScope, $http, $log, $window, Upload) {
-    $http.get ('/user/sessionInfo'). then (function (d) {
-        if (d.data.status == 'success') {
-            $rootScope.sessionInfo = d.data.message.doc;
-            console.log ($scope.sessionInfo);
-        }
-        else
-            $window.location = '/';
-    }, function (d) {
-        $log.log ('ERROR: '+ d);
-    });
+    
+    $rootScope.fetchSessionInfo = function (){
+        $http.get ('/user/sessionInfo'). then (function (d) {
+            if (d.data.status == 'success') {
+                if (d.data.message.doc)
+                    $rootScope.sessionInfo = d.data.message.doc;
+                else
+                    $rootScope.sessionInfo = d.data.message;
+                console.log ($scope.sessionInfo);
+            }
+            else
+                $window.location = '/';
+        }, function (d) {
+            $log.log ('ERROR: '+ d);
+        });
+    }
+
+    $rootScope.fetchSessionInfo();
 
     $rootScope.logout = function () {
         $http.get ('/user/logout').then (function () {

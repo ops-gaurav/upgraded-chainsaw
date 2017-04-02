@@ -160,3 +160,12 @@ header {
 .ind-category:hover .category-controls {
     display: block;
 }
+
+.filter-section {
+    padding: 20px 10px 20px 10px;
+    background: #f0f0f0;
+    transition: all .25s ease-in-out;
+}
+hr#dark {
+    border-color: silver;
+}

@@ -1,49 +1,81 @@
-<h4>{{pageTitle}}</h4>
-<div class="panel panel-default">
-    <div class='panel-heading'>
-        <form class="form-inline">
-            <div class="form-group">
-               
+<section class='container'>
+    <section class='row'>
+        <section class='col-md-3 filter-section'>
+            <h3>Organize products</h3>
+            <hr id='dark'/>
+            <div class="dropdown">
+                Filter items: <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+                    {{selectedFilter}}
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li ng-click='fetchProducts()'>
+                        <a href="#" >All</a>
+                    </li>
+                    <li ng-repeat='category in productCategories' ng-click='fetchCategory(category)'>
+                        <a href="#">{{category}}</a>
+                    </li>
+                </ul>
             </div>
-            <div class="form-group">
-                <div class="dropdown">
-                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Filter: <i>Showing all</i>
-                    <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li ng-click='fetchProducts()'>
-                            <a href="#" >All</a>
-                        </li>
-                        <li ng-repeat='category in productCategories' ng-click='fetchCategory(category)'>
-                            <a href="#">{{category}}</a>
-                        </li>
-                    </ul>
-                </div>
+            <br/>
+            <div class="dropdown">
+                Sort items: <button ng-disabled='true' class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-sort drawer-icon" aria-hidden="true"></span>&nbsp; 
+                    Default
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li ng-click='fetchProducts()'>
+                        <a href="#" >Default</a>
+                    </li>
+                    <li><a href><b>Price:</b> High to low</a></li>
+                    <li><a href><b>Price:</b> Low to high</a></li>
+                </ul>
             </div>
-        </form>
-    </div>
-    <div class="panel-body">
-        <table class='table table-striped'>
-            <thead>
-                <tr>
-                    <td></td>
-                    <td>Name</td>
-                    <td>Price</td>
-                    <td>Category</td>
-                    <td>Buy now</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat='product in products'>
-                    <td>
-                        <p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
-						<p class='text-center' ng-hide='product.image'><img class='{{product._id}}' src='images/product.png'  width=40 /><p>
-                    </td>
-                    <td>{{product.name}}</td>
-                    <td>{{product.price | currency:"&#8377;"}}</td>
-                    <td>{{product.category}}</td>
-                    <td><button class='btn btn-default btn-sm' ng-click='buyItem(product._id)'>Buy now</button></td>
-                </tr>
-            </tbody>
-        </table>
+        </section>
+
+        <section class='col-md-9'>
+            <h3 class='page-header'>{{pageTitle}}</h3>
+            <section class='table-responsive'>
+                <table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>Name</td>
+                            <td>Price</td>
+                            <td>Category</td>
+                            <td>Buy now</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='product in products'>
+                            <td>
+                                <p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
+                                <p class='text-center' ng-hide='product.image'><img class='{{product._id}}' src='/images/product.png'  width=40 /><p>
+                            </td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.price | currency:"&#8377;"}}</td>
+                            <td>{{product.category}}</td>
+                            <td>
+                                <button class='btn btn-default btn-sm' ng-click='buyItem(product._id)'>Buy now</button>
+                                &nbsp; <button ng-disabled="true" class='btn btn-default btn-sm' ng-click='buyItem(product._id)'><span class="glyphicon glyphicon-gift drawer-icon" aria-hidden="true"></span>&nbsp; Add to wishlist</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+    </section>
+</section>
+
+<div class="modal fade" id="purchase-success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                You have successfully bought {{purchase.name}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
     </div>
 </div>

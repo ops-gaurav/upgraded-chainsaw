@@ -1,5 +1,48 @@
 <br/>
 <br/>
-<section class='container'>
-    <h2 class='page-header'>{{title}}</h2>
+<section class='container' ng-init='currentTab = 1'>
+    <section class='row'>
+        <section class='col-md-12'>
+            <h2 class='page-header'>{{title}}</h2>
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-class="{active: currentTab == 1}" data-ng-click='currentTab = 1'><a href="#">Profile</a></li>
+                <li role="presentation" ng-class="{active: currentTab == 2}" data-ng-click='currentTab = 2'><a href="#">Display Picture</a></li>
+                <li role="presentation"  ng-class="{active: currentTab == 3}" data-ng-click='currentTab = 3'><a href="#">Passwords</a></li>
+            </ul>
+        </section>
+    </section>
+    <br/>
+    <section class='row'>
+        <section class='col-md-3'></section>
+        <section class='col-md-6 centre-container'>
+            <section ng-show='currentTab == 1'>
+                <br/>
+                <form class='form' name='editForm' data-ng-submit="editUserRequest()">
+                    <legend>Update your existing information</legend>
+                    Update phone number and email address which are used to send the order and tracking details.
+                    <br/><br/>
+                    <section class='form-group'>
+                        <label>Phone number: {{sessionInfo.phone}}</label>
+                        <input class='form-control' ng-value='sessionInfo.phone' ng-model='edit.phone' name = 'editPhone' mask="(999) 999-9999" clean='true' type='text' required/> 
+                    </section>
+                    <section class='form-group'>
+                        <label>Email id</label>
+                        <input class='form-control' name='editEmail' ng-value='sessionInfo.email' ng-model='edit.email' type='email' placeholder='Edit email' required/> 
+                        <label ng-show='editForm.editEmail.$invalid' class='label label-danger'>Email invalid</label>
+                    </section>
+                    <button ng-disabled ='editForm.$invalid' type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </section>
+            <section ng-show='currentTab == 2'>
+                
+                <p class='text-center'>
+                    
+                </p>
+            </section>
+            <section ng-show='currentTab == 3'>
+                Third
+            </section>
+        </section>
+        <section class='col-md-3'></section>
+    </section>
 </section>
