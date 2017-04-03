@@ -47,7 +47,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 	});
 }]);
 
-app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http){
+app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'PaginationService', function ($scope, $rootScope, $http, PaginationService){
 	// load all the orders here
 
 	$scope.orders = [];
@@ -62,11 +62,19 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
 		"5": 'Username'
 	}
 
+	$scope.fetchPage = function (page) {
+		$scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
+
+		$scope.orders = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+	}
+
 	$http.get ('/order/multiPopulate').then (function (data) {
 		var response = data.data;
 		$scope.orders = response;
 
-		$scope.rawData = $scope.orders;
+		$scope.rawData = $scope.orders
+		
+		$scope.fetchPage (1);
 		//$rootScope.fetchUsers();
 	}, function (data) {
 		console.log ('ERROR: '+ JSON.stringify (data));
@@ -77,22 +85,22 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
 		$scope.sortFactor = sortMap[id];
 		switch (id) {
 			case 1: 
-				$scope.orders.sort (function (a, b) {
-						return a._product.price - b._product.price;	
+				$scope.rawData.sort (function (a, b) {
+					return a._product.price - b._product.price;	
 				});
 				break;
 			case 2:
-				$scope.orders.sort (function (a, b) {
+				$scope.rawData.sort (function (a, b) {
 					return b._product.price - a._product.price;	
 				});
 				break;
 			case 3:
-				$scope.orders.sort (function (a,b) {
+				$scope.rawData.sort (function (a,b) {
 					return a.time - b.time;
 				});
 				break;
 			case 4:
-				$scope.orders.sort (function (a,b) {
+				$scope.rawData.sort (function (a,b) {
 					return b.time - a.time;
 				});
 				break;
@@ -102,6 +110,8 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
 			default:
 				$scope.orders = $scope.rawData;
 		}
+
+		$scope.fetchPage (1);
 	}
 
 	$scope.title = 'All Orders';
@@ -112,7 +122,10 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
 	}
 }]);
 
-app.controller ('UsersListController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+app.controller ('UsersListController', ['$scope', 
+				'$rootScope', 
+				'$http', 
+				'PaginationService', function ($scope, $rootScope, $http, PaginationService) {
 	// load alll the users here
 	$scope.title = 'All users';
 
@@ -120,6 +133,12 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 
 	$scope.users = []
 	$scope.rawData = [];
+
+	$scope.fetchPage = function (page) {
+		$scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
+		$scope.users = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+	}
+
 	// call one after another
 	// call after all the orders have been loaded
 	$scope.fetchUsers = function () {
@@ -128,7 +147,9 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 			if (data.data.status =='success') {
 				$scope.users = data.data.message;
 				$scope.rawData = $scope.users;
-				console.log ($scope.users);
+				//console.log ($scope.users);
+
+				$scope.fetchPage (1);
 			} else
 				console.log (data.data.message);
 
@@ -305,7 +326,11 @@ app.controller ('UsersListController', ['$scope', '$rootScope', '$http', functio
 	};
 }]);
 
-app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upload', function ($scope, $rootScope, $http, Upload) {
+app.controller ('ProductsListController', ['$scope', 
+				'$rootScope', 
+				'$http', 
+				'Upload',
+				'PaginationService', function ($scope, $rootScope, $http, Upload, PaginationService) {
 	$scope.title = 'All products';
 	// $scope.productCategories = [ 'Accessory', 'Electronics' , 'Art', 'Sports'];
 	$scope.productCategories = [];
@@ -335,13 +360,20 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', 'Upl
 		$scope.selectedCategory = category;
 	}
 
+	$scope.fetchPage = function  (page) {
+		$scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
+		$scope.products = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+	}
+
 	$scope.fetchProducts = function () {
 		console.log ('fetching products');
 		$http.get ('/product/all').then (function(d){
 			if (d.data.status == 'success') {
 				$scope.rawData = d.data.data;
 				$scope.products = $scope.rawData;
-				console.log ($scope.products);
+
+				$scope.fetchPage (1);
+				// console.log ($scope.products);
 			}
 			else
 				console.log (d.data.message);
@@ -663,3 +695,46 @@ app.controller ('AdminController', ['$rootScope', '$http', '$window', '$state', 
 		});
 	}
 }]);
+
+app.factory ( 'PaginationService', function () {
+    return {
+        getPage: function (totalItems, pageItems, currentPage) {
+            // var totalItems = data.length;
+
+            pageItems = pageItems || 5;
+            currentPage = currentPage || 1;
+
+            var totalPages = Math.ceil (totalItems/pageItems);
+
+            var startIndex = ((currentPage - 1) * pageItems);
+            var endIndex = Math.min (startIndex+pageItems, totalItems);
+
+            var pageIndexes = [];
+
+            if (currentPage <= 3) 
+                for (var i=1; i<=6; i++)
+                    if (i > totalPages) break;
+                    else pageIndexes.push (i);
+            else if (currentPage == totalPages)
+                for (var i= totalPages-5; i<=totalPages; i++)
+                    pageIndexes.push (i);
+            else {
+                for (var i=currentPage-3; i<=currentPage; i++)
+                    pageIndexes.push (i);
+                for (var i=currentPage+1;i<=currentPage+2; i++)
+                    if (i > totalPages)
+                        break;
+                    else pageIndexes.push (i);
+            }
+            return {
+                totalPages: totalPages,
+                currentPage: currentPage,
+                pageItems: pageItems,
+                startIndex: startIndex,
+                endIndex: endIndex,
+                pages: pageIndexes
+            };
+
+        }
+    }
+} );

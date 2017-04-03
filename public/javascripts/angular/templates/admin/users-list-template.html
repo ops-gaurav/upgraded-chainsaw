@@ -27,7 +27,7 @@
 				</div>
 			</form>
 		</div>
-		<div class="panel-body table-responsive">
+		<div class=	"panel-body table-responsive">
 			<table class="table table-hover table-striped">
 				<thead>
 					<td></td>
@@ -55,7 +55,20 @@
 				</tbody>
 			</table>
 		</div>
-		<div class='panel-footer'>
+		<div class='panel-footer text-center'>
+			
+			<ul class="pagination pagination-sm">
+				<li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'>
+					<a href="#">&laquo;First</a>
+				</li>
+				<li data-ng-repeat="page in pages.pages" ng-class='{active: pages.currentPage == page' ng-click='fetchPage (page)'>
+					<a href="#">{{page}}</a>
+				</li>
+				<li ng-class='{disabled: pages.currentPage == pages.totalPages}'  ng-click='fetchPage (page)'>
+					<a href="#">&raquo;Last</a>
+				</li>
+			</ul>
+			
 		</div>
 
 		<div class="modal fade" id="new-user-modal">

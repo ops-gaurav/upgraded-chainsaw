@@ -24,4 +24,19 @@
             </tbody>
         </table>
     </section>
+
+    <p class='text-center'>
+        
+        <ul class="pagination pagination-sm">
+            <li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'>
+                <a href="#">&laquo;First</a>
+            </li>
+            <li ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page)'>
+                <a href="#">{{page}}</a>
+            <li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'>
+                <a href="#">&raquo;Last</a>
+            </li>
+        </ul>
+        
+    </p>
 </section>

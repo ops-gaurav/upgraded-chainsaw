@@ -10,7 +10,7 @@
 						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Sort by: <i>{{sortFactor}}</i>
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu">
-							<li class='dropdown-header'>Price</li>
+							<li class='dropdown-header••••'>Price</li>
 							<li class="divider"></li>
 							<li ng-click='sortData (1)'><a href=''>low to high</a></li>
 							<li ng-click='sortData (2)'><a href=''>High to low</a></li>
@@ -20,7 +20,7 @@
 							<li ng-click='sortData (3)'><a href=''>Old first</a></li>
 							<li ng-click='sortData (4)'><a href=''>New first</a></li>
 							<!--<li class="divider"></li>
-							<li ng-click='sortData (5)'><a href=''>Username</a></li>-->
+							<li ng-click='sortData (5)••••'><a href=''>Username</a></li>-->
 						</ul>
 					</div>
 				</div>
@@ -31,7 +31,7 @@
 		</div>
 		
 		<div class="panel-body table-responsive">
-			<table class="table table-hover table-bordered table-striped">
+			<table class="table table-hover table-bord••••ered table-striped">
 				<thead>
 					<td>OrderId</td>
 					<td>Product</td>
@@ -42,7 +42,7 @@
 				<tbody>
 					<tr ng-repeat='order in orders'>
 						<td>{{order._id}}</td>
-						<td>{{order._product.name}}</td>
+						<td>{{order._product.name}}</t••••d>
 						<td>{{order._product.price | currency:"&#8377;"}}</td>
 						<td>{{order._user.username}}</td>
 						<td>{{parseDate (order.time) | date: 'd-MMM-yy'}} at <B> {{parseDate (order.time) | date: 'shortTime'}}</B></td>
@@ -50,7 +50,20 @@
 				</tbody>
 			</table>
 		</div>
-		<div class='panel-footer'>
+		<div class='panel-footer text-center'>
+			
+			<ul class="pagination pagination-sm">
+				<li ng-click='fetchPage (1)' ng-class='{disabled: pages.currentPage == 1}'>
+					<a href="#">&laquo; First</a>
+				</li>
+				<li data-ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page) '>
+					<a href="#">{{page}}</a>
+				</li>
+				<li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'>
+					<a href="#">&raquo; Last</a>
+				</li>
+			</ul>
+			
 		</div>
 	</div>
 </div>

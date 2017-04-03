@@ -1,4 +1,4 @@
-var app = angular.module ('user', ['ui.router', 'ngFileUpload', 'ngMask']);
+var app = angular.module ('user', ['ui.router', 'ngFileUpload', 'ngMask', 'ngAnimate']);
 
 app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
@@ -40,7 +40,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
     });
 }]);
 
-app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$log', 'ProductsPaginationService', function ($scope, $rootScope, $http, $log, ProductsPaginationService) {
+app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$log', 'PaginationService', function ($scope, $rootScope, $http, $log, PaginationService) {
     $scope.pageTitle = 'We have following products for you to shop today';
     $scope.productCategories = [];
     $scope.selectedFilter = 'All';
@@ -61,10 +61,10 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
 
     $scope.fetchPage = function (page) {
         if ($scope.selectedFilter == 'All') {
-            $scope.pages = ProductsPaginationService.getPage ($scope.rawData.length, 5, page);
+            $scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
             $scope.products = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
         } else {
-            $scope.pages = ProductsPaginationService.getPage ($scope.products.length, 5, page);
+            $scope.pages = PaginationService.getPage ($scope.products.length, 5, page);
             $scope.products = $scope.products.slice ($scope.pages.startIndex, $scope.pages.endIndex);
         }
     }
@@ -136,13 +136,20 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
     }
 }]);
 
-app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+app.controller ('OrdersListController', ['$scope', '$rootScope', '$http' , 'PaginationService' , function ($scope, $rootScope, $http, PaginationService) {
     $scope.pageTitle = 'Your recent orders';
+    $scope.rawData = [];
+
+    $scope.fetchPage = function (page) {
+        $scope.pages = PaginationService.getPage ($scope.orders.length, 5, page);
+        $scope.orders = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+    };
 
     $scope.fetchOrders = function () {
         $http.get ('/order/myorders').then (function (data){
             if (data.data.status == 'success' ) {
                 $scope.orders = data.data.data;
+                $scope.rawData = $scope.orders;
                 console.log ('orders: '+ JSON.stringify($scope.orders));
             }
             else
@@ -313,7 +320,7 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
 }]);
 
 
-app.factory ( 'ProductsPaginationService', function () {
+app.factory ( 'PaginationService', function () {
     return {
         getPage: function (totalItems, pageItems, currentPage) {
             // var totalItems = data.length;
