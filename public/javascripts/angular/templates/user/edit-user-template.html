@@ -34,13 +34,39 @@
                 </form>
             </section>
             <section ng-show='currentTab == 2'>
-                
                 <p class='text-center'>
-                    
+                    <h3>Change your profile picture</h3>
+                    <p class='text-center' ng-if='sessionInfo.image'>
+                        <img ng-show = 'sessionInfo.image' class='{{sessionInfo._id}} img img-circle' ng-src='/product/image/{{sessionInfo.image.value}}/{{sessionInfo.image.mime}}'  height=100 width=100 />
+                        <img ng-hide='sessionInfo.image' class='{{sessionInfo._id}}' src='http;localhost:3000/images/product.png'  width=40 />
+                        <br/>
+                        <a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, sessionInfo._id)'>
+                            Change picture
+                        </a>
+                    </p>
                 </p>
             </section>
             <section ng-show='currentTab == 3'>
-                Third
+                <form class='form' name='changePasswordForm' data-ng-submit="updatePasswordRequest">
+                    <legend>Update your password</legend>
+                    <section class='form-group'>
+                        <label>Old password</label>
+                        <input class='form-control' type='password' name='oPass' ng-blur='lookupPassword()' ng-keyup="lookupPassword()" placeholder='Your old password' ng-model='change.oldPass' required/>
+                        <label ng-show = 'changePasswordForm.oPass.$invalid' class='label label-danger'>Password incorrect</label>
+                    </section>
+                    <section class='form-group'>
+                        <label>New password</label>
+                        <input type='password' class='form-control' name='newPass' ng-model='change.newPass' placeholder='Your new password' required/>
+                    </section>
+                    <section class='form-group'>
+                        <label>Confirm password</label>
+                        <input type='password' class='form-control' name='confirmPass' ng-model='change.confirmPass' placeholder='Your new password' required/>
+                        <label ng-show="change.newPass != change.confirmPass && change.newPass" class='label label-danger'>Passwords did not match</label>
+                        <label ng-show="change.newPass == change.confirmPass && change.newPass" class='label label-success'>Passwords match</label>
+                    </section>
+
+                    <button data-ng-disabled="changePasswordForm.$invalid" type='submit' class='btn btn-primary btn-sm'>CHANGE PASSWORD</button>
+                </form>
             </section>
         </section>
         <section class='col-md-3'></section>

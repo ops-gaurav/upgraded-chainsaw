@@ -63,8 +63,26 @@
                     </tbody>
                 </table>
             </section>
-        </section>
+            <section class='text-center'>
+            
+                <ul class="pagination pagination-sm">
+                    <li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage(1)'>
+                        <a href="#">&laquo;First</a>
+                    </li>
+                    <li ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-disabled="pages.currentPage == page" ng-click='fetchPage (page)'>
+                        <a href>{{page}}</a>
+                    </li>
+                    <!--<li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>-->
+                    <li ng-class='{disabled: pages.currentPage == pages.totalPages}' ng-click='fetchPage (pages.pages.length)'><a href="#">&raquo;Last</a></li>
+                </ul>
+                
+            </section>
     </section>
+        </section>
 </section>
 
 <div class="modal fade" id="purchase-success">

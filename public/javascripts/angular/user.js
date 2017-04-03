@@ -40,7 +40,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
     });
 }]);
 
-app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$log', function ($scope, $rootScope, $http, $log) {
+app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$log', 'ProductsPaginationService', function ($scope, $rootScope, $http, $log, ProductsPaginationService) {
     $scope.pageTitle = 'We have following products for you to shop today';
     $scope.productCategories = [];
     $scope.selectedFilter = 'All';
@@ -59,13 +59,26 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
 
     $scope.rawData = [];
 
+    $scope.fetchPage = function (page) {
+        if ($scope.selectedFilter == 'All') {
+            $scope.pages = ProductsPaginationService.getPage ($scope.rawData.length, 5, page);
+            $scope.products = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+        } else {
+            $scope.pages = ProductsPaginationService.getPage ($scope.products.length, 5, page);
+            $scope.products = $scope.products.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+        }
+    }
+
     $scope.fetchProducts = function () {
+        $scope.selectedFilter = "All";
         $http.get ('/product/all').then (function(d){
             if (d.data.status == 'success'){
                 $scope.rawData = d.data.data;
                 // represents the display data
                 $scope.products = $scope.rawData;
-                $log.log ($scope.products);
+                // $log.log ($scope.products);
+
+                $scope.fetchPage (1);
             }
             else
                 $log.log ('response error: '+ d.data.message);
@@ -142,7 +155,7 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', functi
     $scope.fetchOrders();
 }]);
 
-app.controller ('EditUserController', ['$scope','$rootScope', '$http', '$log' ,'$state', function ($scope, $rootScope, $http, $log, $state) {
+app.controller ('EditUserController', ['$scope','$rootScope', '$http', '$log' ,'$state', 'Upload', '$window' , function ($scope, $rootScope, $http, $log, $state, Upload, $window) {
     $scope.title ='Edit user information'; 
 
     $scope.editUserRequest = function () {
@@ -166,6 +179,36 @@ app.controller ('EditUserController', ['$scope','$rootScope', '$http', '$log' ,'
         }, function (d) {
             if (d.status == 500) $log.error ('server error');
             else $log.error (JSON.stringify (d));
+        });
+    }
+
+    $scope.lookupPassword = function () {
+        if ($scope.change.oldPass == $rootScope.sessionInfo.password) {
+            $scope.changePasswordForm.oPass.$setValidity ('', true);
+        } else {
+            $scope.changePasswordForm.oPass.$setValidity ('', false);
+        }
+    }
+
+    $scope.updatePasswordRequest = function () {
+        var payload = {
+            username: $rootScope.sessionInfo.username,
+            password: $scope.change.newPass,
+            email: $rootScope.sessionInfo.email,
+            phone: $rootScope.sessionInfo.phone,
+            type: $rootScope.sessionInfo.type,
+            image: $rootScope.sessionInfo.image
+        }
+        $http.put ('/user/update/'+ $rootScope.sessionInfo._id, payload). then (function (d) {
+            if (d.data.status == 'success')
+                $window.location = '/';
+            else
+                $log.log (d.data.message);
+        }, function (d) {
+            if (d.status == 500)
+                $log.error ('server error');
+            else 
+                $log.error (JSON.stringify (d));
         });
     }
 }]);
@@ -216,7 +259,7 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
 
                     var nUrl = 'http://localhost:3000/user/image/'+ image.value +'/'+ image.mime;
 
-                   location.reload ();
+                    $window.location = '/user';
                 }
                 else
                     console.log (d.data.message);
@@ -268,3 +311,47 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
         $('#edit-user-modal').modal ('hide');
     }
 }]);
+
+
+app.factory ( 'ProductsPaginationService', function () {
+    return {
+        getPage: function (totalItems, pageItems, currentPage) {
+            // var totalItems = data.length;
+
+            pageItems = pageItems || 5;
+            currentPage = currentPage || 1;
+
+            var totalPages = Math.ceil (totalItems/pageItems);
+
+            var startIndex = ((currentPage - 1) * pageItems);
+            var endIndex = Math.min (startIndex+pageItems, totalItems);
+
+            var pageIndexes = [];
+
+            if (currentPage <= 3) 
+                for (var i=1; i<=6; i++)
+                    if (i > totalPages) break;
+                    else pageIndexes.push (i);
+            else if (currentPage == totalPages)
+                for (var i= totalPages-5; i<=totalPages; i++)
+                    pageIndexes.push (i);
+            else {
+                for (var i=currentPage-3; i<=currentPage; i++)
+                    pageIndexes.push (i);
+                for (var i=currentPage+1;i<=currentPage+2; i++)
+                    if (i > totalPages)
+                        break;
+                    else pageIndexes.push (i);
+            }
+            return {
+                totalPages: totalPages,
+                currentPage: currentPage,
+                pageItems: pageItems,
+                startIndex: startIndex,
+                endIndex: endIndex,
+                pages: pageIndexes
+            };
+
+        }
+    }
+} );
