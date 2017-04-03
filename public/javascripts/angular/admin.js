@@ -52,6 +52,7 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'Pagin
 
 	$scope.orders = [];
 	$scope.rawData = [];
+	$scope.auxData = [];
 
 	$scope.sortFactor = 'Default';
 	var sortMap = {
@@ -63,9 +64,9 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'Pagin
 	}
 
 	$scope.fetchPage = function (page) {
-		$scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
+		$scope.pages = PaginationService.getPage ($scope.auxData.length, 5, page);
 
-		$scope.orders = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+		$scope.orders = $scope.auxData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
 	}
 
 	$http.get ('/order/multiPopulate').then (function (data) {
@@ -73,6 +74,7 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'Pagin
 		$scope.orders = response;
 
 		$scope.rawData = $scope.orders
+		$scope.auxData = $scope.rawData;
 		
 		$scope.fetchPage (1);
 		//$rootScope.fetchUsers();
@@ -85,22 +87,22 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'Pagin
 		$scope.sortFactor = sortMap[id];
 		switch (id) {
 			case 1: 
-				$scope.rawData.sort (function (a, b) {
+				$scope.auxData.sort (function (a, b) {
 					return a._product.price - b._product.price;	
 				});
 				break;
 			case 2:
-				$scope.rawData.sort (function (a, b) {
+				$scope.auxData.sort (function (a, b) {
 					return b._product.price - a._product.price;	
 				});
 				break;
 			case 3:
-				$scope.rawData.sort (function (a,b) {
+				$scope.auxData.sort (function (a,b) {
 					return a.time - b.time;
 				});
 				break;
 			case 4:
-				$scope.rawData.sort (function (a,b) {
+				$scope.auxData.sort (function (a,b) {
 					return b.time - a.time;
 				});
 				break;
@@ -108,7 +110,7 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'Pagin
 			// 	console.log ('sorting by username');
 			// 	break;
 			default:
-				$scope.orders = $scope.rawData;
+				$scope.auxData = $scope.rawData;
 		}
 
 		$scope.fetchPage (1);
@@ -120,6 +122,28 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'Pagin
 		var date = new Date (timestamp);
 		return date;
 	}
+
+	$scope.filterDate = function () {
+		if ($scope.date_from && $scope.date_to) {
+			var startDate = $scope.date_from;
+			var endDate = $scope.date_to;
+
+
+			$scope.auxData = [];
+
+			$.each ($scope.rawData, function (index, order) {
+
+				var orderDate = new Date (order.time);
+
+				if (orderDate >= startDate && orderDate <= endDate) {
+					$scope.auxData.push (order);
+					console.log ('push');
+				}
+			});
+
+			$scope.fetchPage (1);
+		}
+    }
 }]);
 
 app.controller ('UsersListController', ['$scope', 
@@ -694,6 +718,49 @@ app.controller ('AdminController', ['$rootScope', '$http', '$window', '$state', 
 			$window.location = '/';
 		});
 	}
+
+	$rootScope.usersCount = function () {
+		$http.get ('/user/all'). then (function (d){
+			if (d.data.status == 'success')
+				$rootScope.totalUsers = d.data.message.length;
+			else if (d.data.status == 'error')
+				$rootScope.totalUsers = 0;
+		}, function (d) {
+			if (d.status == 500)
+				console.error ('Server error');
+			else console.error (JSON.stringify (d));
+		});
+	}
+
+	$rootScope.productsCount = function () {
+		$http.get ('/product/all'). then (function (d){
+			if (d.data.status == 'success')
+				$rootScope.totalProducts = d.data.data.length;
+			else if (d.data.status == 'error')
+				$rootScope.totalUsers = 0;
+		}, function (d) {
+			if (d.status == 500)
+				console.error ('Server error');
+			else console.error (JSON.stringify (d));
+		});
+	}
+
+	$rootScope.ordersCount = function () {
+		$http.get ('/order/all'). then (function (d){
+			if (d.data.status == 'success')
+				$rootScope.totalOrders = d.data.data.length;
+			else if (d.data.status == 'error')
+				$rootScope.totalUsers = 0;
+		}, function (d) {
+			if (d.status == 500)
+				console.error ('Server error');
+			else console.error (JSON.stringify (d));
+		});
+	}
+
+	$rootScope.usersCount ();
+	$rootScope.productsCount ();
+	$rootScope.ordersCount();
 }]);
 
 app.factory ( 'PaginationService', function () {

@@ -1,4 +1,4 @@
-var app = angular.module ('app', [ 'ngResource' , 'ui.router', 'ngMask' ]);
+var app = angular.module ('app', [  'ui.router', 'ngMask' ]);
 app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
 	$stateProvider
 		.state('default', {
@@ -19,7 +19,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 	});
 }]);
 
-app.controller ('LoginController', ['$scope', '$window', '$http', 'ApplicationServices', function ($scope, $window, $http, ApplicationServices) {
+app.controller ('LoginController', ['$scope', '$window', '$http', function ($scope, $window, $http) {
 	
 	$scope.username = 'gaurav';
 	$scope.password = '2202319';

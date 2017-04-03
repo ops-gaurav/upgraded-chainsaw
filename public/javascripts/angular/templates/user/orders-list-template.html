@@ -10,33 +10,36 @@
                     <td></td>
                     <td>Name</td>
                     <td>Price</td>
+                    <td>Date of order</td>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat='order in orders'>
                     <td>
                         <p class='text-center' ng-if='order._product.image'><img class='{{order._product._id}}' ng-src='/product/image/{{order._product.image.value}}/{{order._product.image.mime}}'  height=40 /><p>
-                        <p class='text-center' ng-hide='order._product.image'><img class='{{order._product._id}}' src='images/product.png'  width=40 /><p>
+                        <p class='text-center' ng-hide='order._product.image'><img class='{{order._product._id}}' src='/images/product.png'  width=40 /><p>
                     </td>
                     <td>{{order._product.name}}</td>
                     <td>{{order._product.price | currency:"&#8377;"}}</td>
+                    <td>{{parseDate (order.time) | date}}</td>
                 </tr>
             </tbody>
         </table>
     </section>
 
-    <p class='text-center'>
-        
-        <ul class="pagination pagination-sm">
-            <li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'>
-                <a href="#">&laquo;First</a>
-            </li>
-            <li ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page)'>
-                <a href="#">{{page}}</a>
-            <li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'>
-                <a href="#">&raquo;Last</a>
-            </li>
-        </ul>
-        
-    </p>
+    <section class='text-center'>
+        <p class='text-center'>
+            <ul class="pagination pagination-sm">
+                <li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'>
+                    <a href="#">&laquo;First</a>
+                </li>
+                <li ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page)'>
+                    <a href="#">{{page}}</a>
+                <li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'>
+                    <a href="#">&raquo;Last</a>
+                </li>
+            </ul>
+            
+        </p>
+    </section>  
 </section>

@@ -1,69 +1,75 @@
 <br/>
 <br/>
 <div class='container'>
-	<h3 class='page-header'>{{title}}</h3>
-	<div class="panel panel-default">
-		<div class='panel-heading'>
-			<form class="form-inline">
-				<div class="form-group">
-				<div class="dropdown">
-						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Sort by: <i>{{sortFactor}}</i>
-						<span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<li class='dropdown-header••••'>Price</li>
-							<li class="divider"></li>
-							<li ng-click='sortData (1)'><a href=''>low to high</a></li>
-							<li ng-click='sortData (2)'><a href=''>High to low</a></li>
-							<li class="divider"></li>
-							<li class='dropdown-header'>Date</li>
-							<li class="divider"></li>
-							<li ng-click='sortData (3)'><a href=''>Old first</a></li>
-							<li ng-click='sortData (4)'><a href=''>New first</a></li>
-							<!--<li class="divider"></li>
-							<li ng-click='sortData (5)••••'><a href=''>Username</a></li>-->
-						</ul>
-					</div>
-				</div>
-				<div class="form-group">
-					<!--  form element here-->
-				</div>
-			</form>
-		</div>
-		
-		<div class="panel-body table-responsive">
-			<table class="table table-hover table-bord••••ered table-striped">
-				<thead>
-					<td>OrderId</td>
-					<td>Product</td>
-					<td>Price</td>
-					<td>Ordered by</td>
-					<td>Ordered on</td>
-				</thead>
-				<tbody>
-					<tr ng-repeat='order in orders'>
-						<td>{{order._id}}</td>
-						<td>{{order._product.name}}</t••••d>
-						<td>{{order._product.price | currency:"&#8377;"}}</td>
-						<td>{{order._user.username}}</td>
-						<td>{{parseDate (order.time) | date: 'd-MMM-yy'}} at <B> {{parseDate (order.time) | date: 'shortTime'}}</B></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class='panel-footer text-center'>
+	<section class='row'>
+		<section class='col-md-3 filter-section'>
+			<h4>Organize orders</h4>
+			<br/>
+			<br/>
+			<div class="dropdown">
+				<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Sort by: <i>{{sortFactor}}</i>
+				<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li class='dropdown-header'>Price</li>
+					<li class="divider"></li>
+					<li ng-click='sortData (1)'><a href=''>low to high</a></li>
+					<li ng-click='sortData (2)'><a href=''>High to low</a></li>
+					<li class="divider"></li>
+					<li class='dropdown-header'>Date</li>
+					<li class="divider"></li>
+					<li ng-click='sortData (3)'><a href=''>Old first</a></li>
+					<li ng-click='sortData (4)'><a href=''>New first</a></li>
+				</ul>
+			</div>
+
+			<hr id='dark'/>
+			Between date range<br/><br/>
+			From
+			<input class='form-control' type='date' ng-model='date_from'/>
+			To
+			<input class='form-control' type='date' ng-model='date_to'/>
+			<p class='text-center'><button class='btn btn-default btn-sm' ng-click='filterDate()'>Filter</button></p>
+		</section>
+		<section class='col-md-9'>
+			<h3 class='page-header'>{{title}}</h3>
 			
-			<ul class="pagination pagination-sm">
-				<li ng-click='fetchPage (1)' ng-class='{disabled: pages.currentPage == 1}'>
-					<a href="#">&laquo; First</a>
-				</li>
-				<li data-ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page) '>
-					<a href="#">{{page}}</a>
-				</li>
-				<li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'>
-					<a href="#">&raquo; Last</a>
-				</li>
-			</ul>
+			<div class="well well-lg">
+				This page contains all the information about the whole orders made by the users
+			</div>
 			
-		</div>
-	</div>
+			<div class="table-responsive">
+				<table class="table table-hover table-bordered table-striped">
+					<thead>
+						<td>OrderId</td>
+						<td>Product</td>
+						<td>Price</td>
+						<td>Ordered by</td>
+						<td>Ordered on</td>
+					</thead>
+					<tbody>
+						<tr ng-repeat='order in orders'>
+							<td>{{order._id}}</td>
+							<td>{{order._product.name}}</td>
+							<td>{{order._product.price | currency:"&#8377;"}}</td>
+							<td>{{order._user.username}}</td>
+							<td>{{parseDate (order.time) | date: 'd-MMM-yy'}} at <B> {{parseDate (order.time) | date: 'shortTime'}}</B></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<section class='text-center'>
+				<ul class="pagination pagination-sm">
+					<li ng-click='fetchPage (1)' ng-class='{disabled: pages.currentPage == 1}'>
+						<a href="#">&laquo; First</a>
+					</li>
+					<li data-ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page) '>
+						<a href="#">{{page}}</a>
+					</li>
+					<li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'>
+						<a href="#">&raquo; Last</a>
+					</li>
+				</ul>
+			</section>
+		</section>
+	</section>
 </div>

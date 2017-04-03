@@ -45,6 +45,11 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
     $scope.productCategories = [];
     $scope.selectedFilter = 'All';
 
+    $scope.rawData = [];
+    $scope.auxData = [];
+
+    $scope.sortStrategy = 'Default';
+
     $http.get ('/category/all').then (function (d) {
         if (d.data.status == 'success') {
             var response = d.data.message;
@@ -61,11 +66,11 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
 
     $scope.fetchPage = function (page) {
         if ($scope.selectedFilter == 'All') {
-            $scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
-            $scope.products = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+            $scope.pages = PaginationService.getPage ($scope.auxData.length, 5, page);
+            $scope.products = $scope.auxData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
         } else {
-            $scope.pages = PaginationService.getPage ($scope.products.length, 5, page);
-            $scope.products = $scope.products.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+            $scope.pages = PaginationService.getPage ($scope.auxData.length, 5, page);
+            $scope.products = $scope.auxData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
         }
     }
 
@@ -74,6 +79,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
         $http.get ('/product/all').then (function(d){
             if (d.data.status == 'success'){
                 $scope.rawData = d.data.data;
+                $scope.auxData = $scope.rawData;
                 // represents the display data
                 $scope.products = $scope.rawData;
                 // $log.log ($scope.products);
@@ -106,8 +112,10 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
                 });
             }
         }
-        $scope.products = [];
-        $scope.products = _productsAlias;
+        $scope.auxData = [];
+        $scope.auxData = _productsAlias;
+
+        $scope.fetchPage (1);
 
     }
 
@@ -134,28 +142,75 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
                 console.error (JSON.stringify(d));
         });
     }
+
+    $scope.priceSorting = function (type) {
+        console.log (type);
+        switch (type) {
+            case 1:
+                //low to high
+                $scope.sortStrategy = "Price: Low to high";
+                $scope.auxData.sort ((a,b) => {
+                    return a.price-b.price;
+                });
+                $scope.fetchPage ($scope.pages.currentPage);
+                break;
+            case 2:
+                // high to low
+                $scope.sortStrategy = "Price: High to low";
+                $scope.auxData.sort ((a,b) => {
+                    return b.price-a.price;
+                });
+
+                $scope.fetchPage ($scope.pages.currentPage);
+                break;
+            default:
+                $scope.sortStrategy = "Default";
+                $scope.orders = $scope.rawData;
+        }
+    }
 }]);
 
-app.controller ('OrdersListController', ['$scope', '$rootScope', '$http' , 'PaginationService' , function ($scope, $rootScope, $http, PaginationService) {
+app.controller ('OrdersListController', ['$filter', '$scope', '$rootScope', '$http' , 'PaginationService' , function ($filter, $scope, $rootScope, $http, PaginationService) {
     $scope.pageTitle = 'Your recent orders';
     $scope.rawData = [];
 
+    $scope.auxData = [];
+
     $scope.fetchPage = function (page) {
-        $scope.pages = PaginationService.getPage ($scope.orders.length, 5, page);
-        $scope.orders = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+        $scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
+        $scope.orders = $scope.auxData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+
+      
     };
+
+    $scope.sortType = 'order._product.name';
 
     $scope.fetchOrders = function () {
         $http.get ('/order/myorders').then (function (data){
             if (data.data.status == 'success' ) {
                 $scope.orders = data.data.data;
                 $scope.rawData = $scope.orders;
-                console.log ('orders: '+ JSON.stringify($scope.orders));
+                $scope.auxData = $scope.rawData;
+                //console.log ('orders: '+ JSON.stringify($scope.orders));
+
+                // sorting on all items
+                defaultSortItems();
+                $scope.fetchPage (1);
             }
             else
                 console.log (data.data.message);
         }, function (data){
             console.log (JSON.stringify(data));
+        });
+    }
+
+    $scope.parseDate = function (millis) {
+        return new Date (millis);
+    }
+
+    function defaultSortItems () {
+        $scope.rawData.sort ((a,b) => {
+            return b.time - a.time;
         });
     }
 
@@ -232,7 +287,7 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
                     $rootScope.sessionInfo = d.data.message.doc;
                 else
                     $rootScope.sessionInfo = d.data.message;
-                console.log ($scope.sessionInfo);
+                //console.log ($scope.sessionInfo);
             }
             else
                 $window.location = '/';
@@ -240,6 +295,7 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
             $log.log ('ERROR: '+ d);
         });
     }
+
 
     $rootScope.fetchSessionInfo();
 

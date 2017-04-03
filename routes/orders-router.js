@@ -73,6 +73,16 @@ router.delete ('/remove/:id', (req, res) => {
     } else res.send ({status:'error', message: 'Login first'});
 });
 
+router.get ('/all', (req, res) => {
+    if (req.isAuthenticated ()){
+        Order.find ({}, (err, doc) => {
+            if (err) res.send ({status: 'error', message: 'error: '+ error});
+            else if (doc && doc.length > 0) res.send ({status: 'success', data: doc});
+            else res.send ({status: 'error', message: 'No data'});
+        });
+    } else res.send ({status: 'error', message: 'Login first'});
+});
+
 /**
  * get all the orders in the database
  * for admin only

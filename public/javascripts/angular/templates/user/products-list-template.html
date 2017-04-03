@@ -3,6 +3,10 @@
         <section class='col-md-3 filter-section'>
             <h3>Organize products</h3>
             <hr id='dark'/>
+
+            <div class='form-group'>
+                <input class='form-control' placeholder='Search keywords' ng-model='searchModel'/>
+            </div>
             <div class="dropdown">
                 Filter items: <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
@@ -19,20 +23,20 @@
             </div>
             <br/>
             <div class="dropdown">
-                Sort items: <button ng-disabled='true' class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                Sort items: <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-sort drawer-icon" aria-hidden="true"></span>&nbsp; 
-                    Default
+                    {{sortStrategy}}
                 <span class="caret"></span></button>
                 <ul class="dropdown-menu">
                     <li ng-click='fetchProducts()'>
                         <a href="#" >Default</a>
                     </li>
-                    <li><a href><b>Price:</b> High to low</a></li>
-                    <li><a href><b>Price:</b> Low to high</a></li>
+                    <li class='dropdown-header'>Price</li>
+                    <li ng-click='priceSorting (1)'><a href><b>Price:</b> Low to high</a></li>
+                    <li ng-click='priceSorting (2)'><a href><b>Price:</b> High to low</a></li>
                 </ul>
             </div>
         </section>
-
         <section class='col-md-9'>
             <h3 class='page-header'>{{pageTitle}}</h3>
             <section class='table-responsive'>
@@ -47,7 +51,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat='product in products'>
+                        <tr ng-repeat='product in products | filter: searchModel'>
                             <td>
                                 <p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
                                 <p class='text-center' ng-hide='product.image'><img class='{{product._id}}' src='/images/product.png'  width=40 /><p>

@@ -13,11 +13,11 @@
                     Your User Stats
                 </div>
                 <div class="panel-body">
-                   Currently <p class='large-text'>64</p> USERS
+                   Currently <p class='large-text'>{{totalUsers}}</p> USERS
                 </div>
                 <div class="panel-footer">
                     Control users from 
-                    <button class='btn db-action-btn'>
+                    <button class='btn db-action-btn' ui-sref='users'>
                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                          Users control panel
                     </button>
@@ -31,11 +31,11 @@
                     Your Product Stats
                 </div>
                 <div class="panel-body">
-                   <p class='large-text'>897</p>
+                   <p class='large-text'>{{totalProducts}}</p>
                    PRODUCTS
                 </div>
                 <div class="panel-footer">
-                    Quickly get started by adding <button class='btn db-action-btn'> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>&nbsp;new product</button>
+                    Quickly get started by adding <button class='btn db-action-btn' ui-sref='products'> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>&nbsp;new product</button>
                 </div>
             </div>
         </section>
@@ -46,11 +46,11 @@
                     Order Stats
                 </div>
                 <div class="panel-body text-center">
-                   Currently <p class='large-text'>102</p> ORDERS processed
+                   Currently <p class='large-text'>{{totalOrders}}</p> ORDERS processed
                 </div>
                 <div class='panel-footer'>
                     See full orders summary  
-                    <button class='btn db-action-btn'>
+                    <button class='btn db-action-btn' ui-sref='orders'>
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                          Here
                     </button>
