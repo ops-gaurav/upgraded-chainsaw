@@ -51,7 +51,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat='product in products | filter: searchModel'>
+                        <tr ng-repeat='product in products | filter: searchModel' ng-hide='product.deleted'>
                             <td>
                                 <p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
                                 <p class='text-center' ng-hide='product.image'><img class='{{product._id}}' src='/images/product.png'  width=40 /><p>

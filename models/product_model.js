@@ -5,6 +5,7 @@ var ProductSchema = new Schema ({
     name: String,
     price: Number,
     category: String,
+    deleted: Boolean,
     image: {
         mime: String,
         value: String

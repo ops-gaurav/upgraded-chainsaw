@@ -66,6 +66,7 @@ router.post ('/add', (req, res) => {
                 var product = new Product({
                     name: data.name,
                     price: data.price,
+                    deleted: false,
                     category: data.category
                 });
 
@@ -140,16 +141,26 @@ router.put ('/update/:id', (req, res) => {
         res.send ({status: 'error', message: 'please login as admin first'});
 });
 
+/**
+ * do not raw delete the product, only add a field indicating whether the 
+ * product is available or not
+ */
 router.delete ('/delete/:id', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type =='admin') {
             if (req.params.id) {
-                // mongoose.Promise = es6Promise;
-                // mongoose.connect (config.host, config.db);
-                Product.remove ({_id: req.params.id}).then (() => {
-                    res.send ({status: 'success', message: 'success deleting product'});
-                    // mongoose.disconnect();
+                Product.findOne ({_id: req.params.id}, (err, doc) => {
+                    if (err) res.send ({status: 'error', message: 'Error: '+ err});
+                    else if (doc) {
+                        doc.deleted = true;
+                        doc.save (). then (() => {
+                            res.send ({status: 'success', message: 'deleted product'});
+                        });
+                    } else res.send ({status: 'error', message: 'No data found'});
                 });
+                // Product.remove ({_id: req.params.id}).then (() => {
+                //     res.send ({status: 'success', message: 'success deleting product'});
+                // });
             } else res.send ({status: 'error', message: 'require id to delete'});
         }
     }

@@ -115,17 +115,3 @@ app.controller ('SignupController', ['$scope', '$window', '$http', function ($sc
 	}
 
 }]);
-
-app.service ('ApplicationServices', ['$resource', function ($resource) {
-	this.loginAuth = function () {
-		return $resource ('/user/auth', {username: '@username', password: '@password'}, {
-			authenticate: { method: 'POST' }
-		});
-	};
-
-	this.signup = function () {
-		return $resource ('/user/signup', {username: '@username', password: '@password', phone: '@phone', email: '@email'}, {
-			persist: { method: 'POST' }
-		});
-	}
-}]);

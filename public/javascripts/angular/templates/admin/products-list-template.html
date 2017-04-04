@@ -41,7 +41,7 @@
 						<td></td>
 					</thead>
 					<tbody>
-						<tr ng-repeat='product in products | filter:search_model'>
+						<tr ng-repeat='product in products | filter:search_model' ng-hide='product.deleted'>
 							<td>
 								<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, product._id)'>
 									<p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
