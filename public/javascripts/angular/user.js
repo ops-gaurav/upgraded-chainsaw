@@ -176,14 +176,19 @@ app.controller ('OrdersListController', ['$filter', '$scope', '$rootScope', '$ht
 
     $scope.auxData = [];
 
+    $scope.sortFactor = 'Default';
+	var sortMap = {
+		"1": 'Price: Low to high',
+		"2": 'Price: High to low',
+		"3": 'Date: Old first',
+		"4": 'Date: New first',
+		"5": 'Username'
+	}
+
     $scope.fetchPage = function (page) {
         $scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
         $scope.orders = $scope.auxData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
-
-      
     };
-
-    $scope.sortType = 'order._product.name';
 
     $scope.fetchOrders = function () {
         $http.get ('/order/myorders').then (function (data){
@@ -213,6 +218,61 @@ app.controller ('OrdersListController', ['$filter', '$scope', '$rootScope', '$ht
             return b.time - a.time;
         });
     }
+
+    $scope.sortData = function (id) {
+		$scope.sortFactor = sortMap[id];
+		switch (id) {
+			case 1: 
+				$scope.auxData.sort (function (a, b) {
+					return a._product.price - b._product.price;	
+				});
+				break;
+			case 2:
+				$scope.auxData.sort (function (a, b) {
+					return b._product.price - a._product.price;	
+				});
+				break;
+			case 3:
+				$scope.auxData.sort (function (a,b) {
+					return a.time - b.time;
+				});
+				break;
+			case 4:
+				$scope.auxData.sort (function (a,b) {
+					return b.time - a.time;
+				});
+				break;
+			// case 5:
+			// 	console.log ('sorting by username');
+			// 	break;
+			default:
+				$scope.auxData = $scope.rawData;
+		}
+
+        $scope.filterDate = function () {
+		if ($scope.date_from && $scope.date_to) {
+			var startDate = $scope.date_from;
+			var endDate = $scope.date_to;
+
+
+			$scope.auxData = [];
+
+			$.each ($scope.rawData, function (index, order) {
+
+				var orderDate = new Date (order.time);
+
+				if (orderDate >= startDate && orderDate <= endDate) {
+					$scope.auxData.push (order);
+					console.log ('push');
+				}
+			});
+
+			$scope.fetchPage (1);
+		}
+    }
+
+		$scope.fetchPage (1);
+	}
 
     $scope.fetchOrders();
 }]);

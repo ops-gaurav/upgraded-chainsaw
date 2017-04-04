@@ -157,10 +157,11 @@ app.controller ('UsersListController', ['$scope',
 
 	$scope.users = []
 	$scope.rawData = [];
+	$scope.auxData = [];
 
 	$scope.fetchPage = function (page) {
-		$scope.pages = PaginationService.getPage ($scope.rawData.length, 5, page);
-		$scope.users = $scope.rawData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
+		$scope.pages = PaginationService.getPage ($scope.auxData.length, 5, page);
+		$scope.users = $scope.auxData.slice ($scope.pages.startIndex, $scope.pages.endIndex);
 	}
 
 	// call one after another
@@ -171,6 +172,7 @@ app.controller ('UsersListController', ['$scope',
 			if (data.data.status =='success') {
 				$scope.users = data.data.message;
 				$scope.rawData = $scope.users;
+				$scope.auxData = $scope.rawData;
 				//console.log ($scope.users);
 
 				$scope.fetchPage (1);
@@ -187,9 +189,10 @@ app.controller ('UsersListController', ['$scope',
 	$scope.fetchUsers();
 
 	$scope.filterUser = function (userType) {
-		$scope.selectedUser = 'All';
+		$scope.selectedUser = userType;
+
 		if (userType == 'All') {
-			$scope.users = $scope.rawData;
+			$scope.auxData = $scope.rawData;
 		} else {
 			var _alias = [];
 			for (var i=0; i<$scope.rawData.length; i++) {
@@ -197,8 +200,10 @@ app.controller ('UsersListController', ['$scope',
 				if (p.type == userType)
 					_alias.push (p);
 			}
-			$scope.users = _alias;
+			$scope.auxData = _alias;
 		}
+
+		$scope.fetchPage (1);
 	}
 
 	$scope.showNewUserModal = function() {

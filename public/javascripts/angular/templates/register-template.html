@@ -1,6 +1,8 @@
+<br/>
+<br/>
 <section class='container custom-container'>
     <section class='col-md-3'></section>
-    <section class='col-md-6'>
+    <section class='col-md-6 centre-container'>
 
 		<form name='newUserForm' ng-submit="createUser ()">
 			<legend>Sign up form</legend>
@@ -35,7 +37,7 @@
 			</section>
 			<div class="dropdown" ng-init='nType="user"'>
 				<label>User type</label>
-				<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{nType}}
+				<button class=" disabled btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{nType}}
 				<span class="caret"></span></button>
 				<ul class="dropdown-menu">
 					<li ng-click='nType = "admin"'><a href="#">Admin</a></li>

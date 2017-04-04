@@ -1,114 +1,120 @@
 <br/> 
 <br/>
 <section class='container'>
-	<h3 class='page-header'>{{title}}</h3>
-	<div class="panel panel-default">
-		<div class='panel-heading'>
-			<form class="form-inline">
-				<div class="form-group">
+	<section class='row'>
+		<section class='col-md-3 filter-section'>
+			<h3>Organize products</h3>
+			<br/>
+			<br/>
+			<div class="form-group">
 				<div class="dropdown">
-						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Filter: <i>{{selectedCategory}}</i>
-						<span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<li ng-click='fetchProducts()'>
-								<a href="#" >All</a>
-							</li>
-							<li ng-repeat='category in productCategories' ng-click='fetchCategory(category)'>
-								<a href="#">{{category}}</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="form-group">
-					<a class='btn btn-success btn-sm'  ui-sref='product-new'> + Add new product</a>
-				</div>
-			</form>
-		</div>
-		<div class="panel-body table-responsive">
-			<table class="table table-hover table-striped table-bordered">
-				<thead>
-					<td></td>
-					<td>Product</td>
-					<td>Category</td>
-					<td>price</td>
-					<td></td>
-				</thead>
-				<tbody>
-					<tr ng-repeat='product in products'>
-						<td>
-							<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, product._id)'>
-								<p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
-								<p ng-hide='product.image'><img class='{{product._id}}' src='/images/product.png'  width=40 /><p>
-							</a>
-						</td>
-						<td>{{product.name}}</td>
-						<td>{{product.category}}</td>
-						<td>{{product.price | currency:"&#8377;"}}</td>
-						<td>
-							<button ng-click='deleteConfirmation (product)' class='btn btn-default btn-sm' ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-							<button ng-click='editProductDialogue (product)' ng-disabled='user.type == "admin"' class='btn btn-default btn-sm'><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class='panel-footer text-center'>
-			
-			<ul class="pagination pagination-sm">
-				<li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'><a href="#">&laquo;First</a></li>
-				<li ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page)'>
-					<a href="#">{{page}}</a>
-				</li>
-				<li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'><a href="#">&raquo;Last</a></li>
-			</ul>
-			
-		</div>
-
-		<div class="modal fade" id="edit-product-modal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Edit product</h4>
-					</div>
-					<div class="modal-body">
-						<input class='form-control' ng-model='edit.name' type='text' placeholder='new username'/> <br/>
-						<input class='form-control' type='number' ng-model='edit.price' placeholder="new password" /> <br/>
-						<br/>
-						<div class="dropdown">
-							<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Category: {{edit.category}}
-							<span class="caret"></span></button>
-							<ul class="dropdown-menu">
-								<li ng-repeat='category in productCategories'>
-									<a href="#" ng-click='edit.category = category'>{{category}}</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" ng-click='editProductRequest()'>Update</button>
-					</div>
+					<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Filter: <i>{{selectedCategory}}</i>
+					<span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li ng-click='fetchProducts()'>
+							<a href="#" >All</a>
+						</li>
+						<li ng-repeat='category in productCategories' ng-click='fetchCategory(category)'>
+							<a href="#">{{category}}</a>
+						</li>
+					</ul>
 				</div>
 			</div>
-		</div>
+		</section>
 
-		<div class="modal fade" id="delete-product-modal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Delete product</h4>
-					</div>
-					<div class="modal-body">
-						Are you sure to delete &quot;<em><b>{{edit.name}}</b></em>&quot; from products?
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Nope</button>
-						<button type="button" class="btn btn-primary" ng-click='deleteProductRequest()'>Yep</button>
-					</div>
+		<section class='col-md-9'>
+			<h3 class='page-header'>{{title}}</h3>
+			<section class='form-inline'>
+				<section class='form-group'>
+					<a class='btn btn-success btn-sm'  ui-sref='product-new'> + Add new product</a>
+					<input type='text' class='form-control' ng-model='search_model' placeholder='Enter keywords to search'/>
+				</section>
+			</section>
+			<br/>
+			<section class='table-responsive'>
+				<table class="table table-hover table-striped table-bordered">
+					<thead>
+						<td></td>
+						<td>Product</td>
+						<td>Category</td>
+						<td>price</td>
+						<td></td>
+					</thead>
+					<tbody>
+						<tr ng-repeat='product in products | filter:search_model'>
+							<td>
+								<a type='file' name='file' ngf-pattern='image/*' accept='image/*' ngf-select='setImage($file, $invalidFiles, product._id)'>
+									<p class='text-center' ng-if='product.image'><img class='{{product._id}}' ng-src='/product/image/{{product.image.value}}/{{product.image.mime}}'  height=30 /><p>
+									<p ng-hide='product.image'><img class='{{product._id}}' src='/images/product.png'  width=40 /><p>
+								</a>
+							</td>
+							<td>{{product.name}}</td>
+							<td>{{product.category}}</td>
+							<td>{{product.price | currency:"&#8377;"}}</td>
+							<td>
+								<button ng-click='deleteConfirmation (product)' class='btn btn-default btn-sm' ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+								<button ng-click='editProductDialogue (product)' ng-disabled='user.type == "admin"' class='btn btn-default btn-sm'><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<div class='text-center'>
+				<ul class="pagination pagination-sm">
+					<li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'><a href="#">&laquo;First</a></li>
+					<li ng-repeat='page in pages.pages' ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page)'>
+						<a href="#">{{page}}</a>
+					</li>
+					<li ng-click='fetchPage (pages.totalPages)' ng-class='{disabled: pages.currentPage == pages.totalPages}'><a href="#">&raquo;Last</a></li>
+				</ul>
+			</div>
+		</section>
+	</section>
+</section>
+
+<div class="modal fade" id="edit-product-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Edit product</h4>
+			</div>
+			<div class="modal-body">
+				<input class='form-control' ng-model='edit.name' type='text' placeholder='new username'/> <br/>
+				<input class='form-control' type='number' ng-model='edit.price' placeholder="new password" /> <br/>
+				<br/>
+				<div class="dropdown">
+					<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Category: {{edit.category}}
+					<span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li ng-repeat='category in productCategories'>
+							<a href="#" ng-click='edit.category = category'>{{category}}</a>
+						</li>
+					</ul>
 				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" ng-click='editProductRequest()'>Update</button>
 			</div>
 		</div>
 	</div>
-</section>
+</div>
+
+<div class="modal fade" id="delete-product-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Delete product</h4>
+			</div>
+			<div class="modal-body">
+				Are you sure to delete &quot;<em><b>{{edit.name}}</b></em>&quot; from products?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Nope</button>
+				<button type="button" class="btn btn-primary" ng-click='deleteProductRequest()'>Yep</button>
+			</div>
+		</div>
+	</div>
+</div>

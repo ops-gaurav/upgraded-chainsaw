@@ -1,9 +1,14 @@
 <br/>
 <br/>
+
 <section class='container'>
-	<h3 class='page-header'>{{title}}</h3>
-	<div class="panel panel-warning">
-		<div class='panel-heading'>
+	<section class='row'>
+		<section class='col-md-3 filter-section'>
+			<h3>Organize users</h3>
+			<br/>
+			<section class='form-group'>
+				
+			</section>
 			<form class="form-inline">
 				<div class="form-group">
 				<div class="dropdown">
@@ -22,173 +27,180 @@
 						</ul>
 					</div>
 				</div>
-				<div class="form-group">
+			</form>
+		</section>
+
+		<section class='col-md-9'>
+			<h3 class='page-header'>{{title}}&nbsp;</h3>
+			<section class='form-inline'>
+				<section class='form-group'>
 					<button class='btn btn-success btn-sm' ng-click='showNewUserModal()'> + Add new user</button>
+					<input type='text' class='form-control'ng-model='search_filter' placeholder='Enter keywords to filter'/>
+				</section>
+			</section>
+			<section class='table-responsive'>
+				<table class="table table-hover table-striped">
+					<thead>
+						<td></td>
+						<td>Username</td>
+						<td>Email</td>
+						<td>Phone</td>
+						<td>Type</td>
+						<td></td>
+					</thead>
+					<tbody>
+						<tr ng-repeat='user in users | filter:search_filter'>
+							<td>
+								<img ng-if='user.image' class='{{user._id}} img-circle' ng-src='/user/image/{{user.image.value}}/{{user.image.mime}}'  height=40 width=40 />
+								<img ng-hide='user.image' class='{{user._id}} img-circle' src='/images/profile.png'  width=40 />
+							</td>
+							<td>{{user.username}}</td>
+							<td>{{user.email}}</td>
+							<td>{{user.phone}}</td>
+							<td>{{user.type}}</td>
+							<td>
+								<button ng-disabled='user.type == "admin"' class='btn btn-danger btn-sm' ng-click='deleteConfirmation (user)'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+								<button ng-click='editUser (user)' ng-disabled='user.type == "admin"' class='btn btn-primary btn-sm'><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+							</td>
+						</tr>	
+					</tbody>
+				</table>
+			</section>
+
+			<section class='text-center'>
+				<ul class="pagination pagination-sm">
+					<li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'>
+						<a href="#">&laquo;First</a>
+					</li>
+					<li data-ng-repeat="page in pages.pages" ng-class='{active: pages.currentPage == page' ng-click='fetchPage (page)'>
+						<a href="#">{{page}}</a>
+					</li>
+					<li ng-class='{disabled: pages.currentPage == pages.totalPages}'  ng-click='fetchPage (page)'>
+						<a href="#">&raquo;Last</a>
+					</li>
+				</ul>
+			</section>
+
+		</section>
+	</section>
+</section>
+
+<div class="modal fade" id="new-user-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Add new user</h4>
+			</div>
+			<form name='newUserForm' ng-submit="createUser ()">
+				<div class="modal-body">
+					All fields are required
+					<section class='form-group'>
+						<label>Username</label>
+						<input class='form-control' ng-blur="usernameLookup()" name='nUsername' ng-model='nUsername' type='text' placeholder='new username' required/> 
+						<label ng-show='editUSuccess' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Username available</label>
+						<label ng-show='editUFailure' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Username not available</label>	
+						<div ng-show='editCheckUsername' class='loader'></div>
+					</section>
+
+					<section class='form-group'>
+						<label>Phone number</label>
+						<input class='form-control' ng-model='nPhone' name = 'nPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
+					</section>
+
+					<section class='form-group'>
+						<label>Password</label>
+						<input class='form-control' ng-model='nPassword' name = 'nPassword' type='password' placeholder='New password' required/> 
+					</section>
+					<section class='form-group'>
+						<label>Confirm password</label>
+						<input class='form-control' ng-model='cPassword' name = 'cPassword' type='password' placeholder='Confirm password' required/>
+						<label ng-show='cPassword == nPassword && cPassword' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp; Password Match</label>
+						<label ng-show='cPassword != nPassword' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Passwords did not match</label>
+					</section>
+					<section class='form-group'>
+						<label>Email id</label>
+						<input class='form-control' name='nEmail' ng-model='nEmail' type='email' placeholder='Edit email' required/> 
+						<label ng-show='newUserForm.nEmail.$invalid' class='label label-danger'>Email invalid</label>
+					</section>
+					<div class="dropdown" ng-init='nType="user"'>
+						<label>User type</label>
+						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{nType}}
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li ng-click='nType = "admin"'><a href="#">Admin</a></li>
+							<li ng-click='nType = "user"'><a href="#">User</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
+					<button ng-disabled ='newUserForm.$invalid' type="submit" class="btn btn-primary">Create</button>
 				</div>
 			</form>
 		</div>
-		<div class=	"panel-body table-responsive">
-			<table class="table table-hover table-striped">
-				<thead>
-					<td></td>
-					<td>Username</td>
-					<td>Email</td>
-					<td>Phone</td>
-					<td>Type</td>
-					<td></td>
-				</thead>
-				<tbody>
-					<tr ng-repeat='user in users'>
-						<td>
-							<img ng-if='user.image' class='{{user._id}} img-circle' ng-src='/user/image/{{user.image.value}}/{{user.image.mime}}'  height=40 width=40 />
-							<img ng-hide='user.image' class='{{user._id}} img-circle' src='/images/profile.png'  width=40 />
-						</td>
-						<td>{{user.username}}</td>
-						<td>{{user.email}}</td>
-						<td>{{user.phone}}</td>
-						<td>{{user.type}}</td>
-						<td>
-							<button ng-disabled='user.type == "admin"' class='btn btn-danger btn-sm' ng-click='deleteConfirmation (user)'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-							<button ng-click='editUser (user)' ng-disabled='user.type == "admin"' class='btn btn-primary btn-sm'><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-						</td>
-					</tr>	
-				</tbody>
-			</table>
-		</div>
-		<div class='panel-footer text-center'>
-			
-			<ul class="pagination pagination-sm">
-				<li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'>
-					<a href="#">&laquo;First</a>
-				</li>
-				<li data-ng-repeat="page in pages.pages" ng-class='{active: pages.currentPage == page' ng-click='fetchPage (page)'>
-					<a href="#">{{page}}</a>
-				</li>
-				<li ng-class='{disabled: pages.currentPage == pages.totalPages}'  ng-click='fetchPage (page)'>
-					<a href="#">&raquo;Last</a>
-				</li>
-			</ul>
-			
-		</div>
+	</div>
+</div>
 
-		<div class="modal fade" id="new-user-modal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Add new user</h4>
-					</div>
-					<form name='newUserForm' ng-submit="createUser ()">
-						<div class="modal-body">
-							All fields are required
-							<section class='form-group'>
-								<label>Username</label>
-								<input class='form-control' ng-blur="usernameLookup()" name='nUsername' ng-model='nUsername' type='text' placeholder='new username' required/> 
-								<label ng-show='editUSuccess' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Username available</label>
-								<label ng-show='editUFailure' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Username not available</label>	
-								<div ng-show='editCheckUsername' class='loader'></div>
-							</section>
-
-							<section class='form-group'>
-								<label>Phone number</label>
-								<input class='form-control' ng-model='nPhone' name = 'nPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
-							</section>
-
-							<section class='form-group'>
-								<label>Password</label>
-								<input class='form-control' ng-model='nPassword' name = 'nPassword' type='password' placeholder='New password' required/> 
-							</section>
-							<section class='form-group'>
-								<label>Confirm password</label>
-								<input class='form-control' ng-model='cPassword' name = 'cPassword' type='password' placeholder='Confirm password' required/>
-								<label ng-show='cPassword == nPassword && cPassword' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp; Password Match</label>
-								<label ng-show='cPassword != nPassword' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Passwords did not match</label>
-							</section>
-							<section class='form-group'>
-								<label>Email id</label>
-								<input class='form-control' name='nEmail' ng-model='nEmail' type='email' placeholder='Edit email' required/> 
-								<label ng-show='newUserForm.nEmail.$invalid' class='label label-danger'>Email invalid</label>
-							</section>
-							<div class="dropdown" ng-init='nType="user"'>
-								<label>User type</label>
-								<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{nType}}
-								<span class="caret"></span></button>
-								<ul class="dropdown-menu">
-									<li ng-click='nType = "admin"'><a href="#">Admin</a></li>
-									<li ng-click='nType = "user"'><a href="#">User</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
-							<button ng-disabled ='newUserForm.$invalid' type="submit" class="btn btn-primary">Create</button>
-						</div>
-					</form>
-				</div>
+<div class="modal fade" id="edit-user-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Edit user</h4>
 			</div>
-		</div>
-
-		<div class="modal fade" id="edit-user-modal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Edit user</h4>
+			<form name='editForm' ng-submit="updateUser (edit)">
+				<div class="modal-body">
+					<section class='form-group'>
+						<label>Username</label>
+						<input class='form-control' ng-blur="usernameLookup()" name='editUsername' ng-model='edit.username' type='text' placeholder='new username' required/> 
+						<label ng-show='editUSuccess' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Username available</label>
+						<label ng-show='editUFailure' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Username not available</label>	
+						<div ng-show='editCheckUsername' class='loader'></div>
+					</section>
+				
+					<section class='form-group'>
+						<label>Phone number</label>
+						<input class='form-control' ng-model='edit.phone' name = 'editPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
+					</section>
+					<section class='form-group'>
+						<label>Email id</label>
+						<input class='form-control' name='editEmail' ng-model='edit.email' type='email' placeholder='Edit email' required/> 
+						<label ng-show='editForm.editEmail.$invalid' class='label label-danger'>Email invalid</label>
+					</section>
+					<div class="dropdown">
+						<label>User type</label>
+						<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{edit.type}}
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li ng-click='edit.type = "admin"'><a href="#">Admin</a></li>
+							<li ng-click='edit.type = "user"'><a href="#">User</a></li>
+						</ul>
 					</div>
-					<form name='editForm' ng-submit="updateUser (edit)">
-						<div class="modal-body">
-							<section class='form-group'>
-								<label>Username</label>
-								<input class='form-control' ng-blur="usernameLookup()" name='editUsername' ng-model='edit.username' type='text' placeholder='new username' required/> 
-								<label ng-show='editUSuccess' class='label label-success'><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Username available</label>
-								<label ng-show='editUFailure' class='label label-danger'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Username not available</label>	
-								<div ng-show='editCheckUsername' class='loader'></div>
-							</section>
-						
-							<section class='form-group'>
-								<label>Phone number</label>
-								<input class='form-control' ng-model='edit.phone' name = 'editPhone' mask="(999) 999-9999" clean='true' type='text' placeholder='Edit phone' required/> 
-							</section>
-							<section class='form-group'>
-								<label>Email id</label>
-								<input class='form-control' name='editEmail' ng-model='edit.email' type='email' placeholder='Edit email' required/> 
-								<label ng-show='editForm.editEmail.$invalid' class='label label-danger'>Email invalid</label>
-							</section>
-							<div class="dropdown">
-								<label>User type</label>
-								<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">{{edit.type}}
-								<span class="caret"></span></button>
-								<ul class="dropdown-menu">
-									<li ng-click='edit.type = "admin"'><a href="#">Admin</a></li>
-									<li ng-click='edit.type = "user"'><a href="#">User</a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
-							<button ng-disabled ='editForm.$invalid' type="submit" class="btn btn-primary">Update</button>
-						</div>
-					</form>
 				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Close</button>
+					<button ng-disabled ='editForm.$invalid' type="submit" class="btn btn-primary">Update</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="delete-user-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Delete confirmation</h4>
 			</div>
-		</div>
-
-		<div class="modal fade" id="delete-user-modal">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Delete confirmation</h4>
-					</div>
-					<div class="modal-body">	
-						Are you sure that you want to delete this user?
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Nope</button>
-						<button type="button" class="btn btn-primary" ng-click='deleteUser(delUser)'>Yep</button>
-					</div>
-				</div>
+			<div class="modal-body">	
+				Are you sure that you want to delete this user?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click='closeModal()'>Nope</button>
+				<button type="button" class="btn btn-primary" ng-click='deleteUser(delUser)'>Yep</button>
 			</div>
 		</div>
 	</div>
-</section>
+</div>

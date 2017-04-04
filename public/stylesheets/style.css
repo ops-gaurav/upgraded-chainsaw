@@ -149,6 +149,7 @@ header {
     padding: 20px;
     box-shadow: 0px 0px 5px 1px silver;
     cursor: pointer;
+    margin-top: 10px;
     transition: all .25s ease-in-out;
 }
 .ind-category:hover {

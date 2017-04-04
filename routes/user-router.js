@@ -28,9 +28,6 @@ passport.use ('PasswordAuth', new LocalStrategy ( {
 	passwordField: 'password'
 },( username, password, done) => {
 
-	// mongoose.Promise = es6Promise;
-	// mongoose.connect (config.host, config.db);
-
 	User.findOne ({username: username}, (err, doc) => {
 		if (err) done (err);
 		else if (doc) 
@@ -40,7 +37,6 @@ passport.use ('PasswordAuth', new LocalStrategy ( {
 						redirect: '/admin',
 						doc: doc
 					}
-					//doc.redirect = '/adminDashboard';
 					done (null, newData);
 				}
 				else {
@@ -56,9 +52,9 @@ passport.use ('PasswordAuth', new LocalStrategy ( {
 		else
 			done (null, false, { failureFlash: 'Username error' });
 	
-		// mongoose.disconnect ();
 	});
 }));
+		// mongoose.disconnect ();
 
 passport.serializeUser ((user, done) => {
     return done (null, user);
@@ -77,16 +73,11 @@ function eRes (message) {
 router.get ('/all', (req, res) => {
 	if (req.isAuthenticated ()) {
 
-		// mongoose.Promise = es6Promise;
-		// mongoose.connect (config.host, config.db);
-
 		User.find ({}, (err, doc) => {
 			if (err) res.send (eRes ('error:'+err))
 			else if (doc && doc.length > 0)
 				res.send (sRes (doc));
 			else res.send (eRes ('no data found'));
-
-			// mongoose.disconnect ();
 		})
 	}
 });
@@ -114,16 +105,13 @@ router.post ('/signup', (req, res) => {
     let data = req.body;
     console.log (data);
     if (data.username && data.password && data.phone && data.email && data.type) {
-		// mongoose.Promise = es6Promise;
-		// mongoose.connect (config.host, config.db);
+
 		User.findOne ({username: data.username}, (err, doc) => {
 			if (err) {
 				res.send ({status: 'error', message: 'some error occurred: '+ err});
-				// mongoose.disconnect ();
 			}
 			else if (doc) {
 				res.send ({status: 'error', message: 'username already exists'});
-				// mongoose.disconnect ();
 			}
 			else {
 				var user = new User ({
@@ -136,7 +124,6 @@ router.post ('/signup', (req, res) => {
 
 				user.save ().then (() => {
 					res.send ({status: 'success', message: 'User created successfully', raw: user});
-					// mongoose.disconnect ();
 				});
 			}
 		})

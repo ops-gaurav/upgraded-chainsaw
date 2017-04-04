@@ -13,13 +13,7 @@
     <section class='row' ng-repeat='categoryRow in categoryBundle'>
         <section class='col-md-3 ind-category' ng-repeat='category in categoryRow'>
             <p class='text-center'>
-                {{category.name}}
-            </p>
-            <p class='text-center category-controls'>
-                <button class='btn btn-default btn-sm'>
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
-                <button class='btn btn-default btn-sm' ng-click='editCategory(category)'>
+                {{category.name}} &nbsp; <button class='btn btn-default btn-sm' ng-click='editCategory(category)'>
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </button>
             </p>
