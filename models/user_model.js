@@ -23,4 +23,24 @@ var UserSchema = new Schema({
 
 var User = mongoose.model ('User', UserSchema);
 
-module.exports = User;
+// module.exports.allUsers = function (next) {
+//     User.find ({}, (err, doc) => {
+//         if (err) next (err, undefined);
+//         else if (doc && doc.length > 0)
+//             next (undefined, doc);
+//         else 
+//             // no data
+//             next (undefined, undefined);
+//     });
+// }
+
+// module.exports.getByUsername = function (uname, next) {
+//     User.findOne ({username: uname}, (err, doc) => {
+//         if (err) next (err, next);
+//         else if (doc) next (undefined, doc);
+//         else next (undefined, undefined);
+//     });
+// }
+
+
+module.exports.model = User;

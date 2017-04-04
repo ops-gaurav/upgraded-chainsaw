@@ -15,6 +15,7 @@ import user from './routes/user-router';
 import order from './routes/orders-router';
 import product from './routes/products-router';
 import category from './routes/category_router';
+// import AltRoute from './routes/user_alt_route';
 
 const app = express();
 const debug = Debug('shop:app');
@@ -47,5 +48,10 @@ app.use ('/user', user);
 app.use ('/order', order);
 app.use ('/product', product);
 app.use ('/category', category);
+
+/**
+ * EXPERIMENTAL
+ */
+// app.use ('/alt', AltRoute);
 
 export default app;
