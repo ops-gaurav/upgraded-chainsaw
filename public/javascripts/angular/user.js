@@ -385,7 +385,7 @@ app.controller ('UserController', ['$scope', '$rootScope', '$http', '$log', '$wi
                     $window.location = '/user';
                 }
                 else
-                    console.log (d.data.message);
+                    console.error (d.data.message);
             }, function (d) {
                 console.error (JSON.stringify(d));
             });

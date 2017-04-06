@@ -30,7 +30,7 @@ app.config (['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 		})
 		.state ('category-new', {
 			url: '/admin/categories/createnew',
-			templateUrl: '/admin/category/new-category-template.html',
+			templateUrl: '/admin/category/new-category-temkplate.html',
 			controller: 'NewCategoryController'
 		})
 		.state ('product-new', {

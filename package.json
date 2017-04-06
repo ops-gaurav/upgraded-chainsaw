@@ -4,8 +4,8 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node ./bin/start",
-    "test": "mocha --recursive './test/*Test.js' --compilers js:babel-core/register"
+    "postinstall": "bower install",
+    "start": "nodemon bin/start"
   },
   "dependencies": {
     "babel-core": "^6.23.1",

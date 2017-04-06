@@ -1,4 +1,5 @@
 module.exports = {
 	host: 'localhost',
-	db: 'shop'
+	db: 'shop',
+	uploadsFolder: './../tempUploads'
 }
