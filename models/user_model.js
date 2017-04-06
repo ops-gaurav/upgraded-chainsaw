@@ -42,6 +42,15 @@ module.exports.getByUsername = function (uname, next) {
     });
 }
 
+
+module.exports.getById = function (id, next) {
+    User.findOne ({_id: id}, (err, doc) => {
+        if (err) next (err, undefined);
+        else if (doc) next (undefined, doc);
+        else next (undefined, undefined);
+    });
+}
+
 module.exports.saveUser = function (data, next) {
     User.findOne ({username: data.username}, (err, doc) => {
         if (err) next (err, undefined);

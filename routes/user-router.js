@@ -68,21 +68,24 @@ router.get ('/usernameLookup/:username', (req, res) => {
 	if (req.params.username) {
 		UserModel.getByUsername (req.params.username, (err, data) => {
 			if (err) res.send (response.error (err));
-			else if (doc) res.send (response.success ('username found'));
+			else if (data) res.send (response.success ('username found'));
 			else res.send (response.error ('username not found'));
 		});
 	}
 	else res.send (eRes ('no username provided'));
 })
 
+/**
+ * REQUIRE to UPDATE
+ */
 router.put ('/update/:id', (req, res) => {
 	var data = req.body;
 	if (data.username && data.password && data.phone && 
 		data.email && data.type) {
 
 		if (req.params.id) {
-			User.findOne ({_id: req.params.id}, (err, doc) => {
-				if (err) res.send (eRes ('Server error: '+ err))
+			UserModel.getById (req.params.id, (err, doc) => {
+				if (err) res.send (response.error (err));
 				else if (doc) {
 					doc.username = data.username;
 					doc.password = data.password;
@@ -90,16 +93,37 @@ router.put ('/update/:id', (req, res) => {
 					doc.email = data.email;
 					doc.type = data.type;
 
-					doc.save (). then (() => {
-						// mongoose.disconnect ();
-						// UPDATE PASSORT SESSION VALUE HERE
-						req.login (doc, err => {
-							if (err) res.send (eRes ('Error loagging in'));
-							else res.send (sRes ('updated'));
-						});
+					UserModel.saveUser (doc, (err, d, raw) => {
+						if (err) res.send (response.error (err));
+						else if (d)
+							if (raw) res.send (response.success (raw));
+							else res.send (response.error (d.message));
+						else res.send (response.error ('Unknown response'));
 					});
-				} else res.send (eRes ('No user found'));
+
+					// res.send (response.success (doc));
+				}
+				else res.send (response.error ('no user found'))
 			})
+			// User.findOne ({_id: req.params.id}, (err, doc) => {
+			// 	if (err) res.send (eRes ('Server error: '+ err))
+			// 	else if (doc) {
+			// 		doc.username = data.username;
+			// 		doc.password = data.password;
+			// 		doc.phone = data.phone;
+			// 		doc.email = data.email;
+			// 		doc.type = data.type;
+
+			// 		doc.save (). then (() => {
+			// 			// mongoose.disconnect ();
+			// 			// UPDATE PASSORT SESSION VALUE HERE
+			// 			req.login (doc, err => {
+			// 				if (err) res.send (eRes ('Error loagging in'));
+			// 				else res.send (sRes ('updated'));
+			// 			});
+			// 		});
+			// 	} else res.send (eRes ('No user found'));
+			// })
 		} else res.send (eRes ('no id provided'));
 	} else res.send (eRes ('Data incomplete'));
 });
