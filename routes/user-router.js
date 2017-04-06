@@ -76,97 +76,58 @@ router.get ('/usernameLookup/:username', (req, res) => {
 })
 
 /**
- * REQUIRE to UPDATE
+ * WORKING
  */
 router.put ('/update/:id', (req, res) => {
 	var data = req.body;
-	if (data.username && data.password && data.phone && 
-		data.email && data.type) {
-
+	if (data.username && data.password && data.phone && data.email && data.type) {
 		if (req.params.id) {
-			UserModel.getById (req.params.id, (err, doc) => {
+			UserModel.update (data, (err, data) => {
 				if (err) res.send (response.error (err));
-				else if (doc) {
-					doc.username = data.username;
-					doc.password = data.password;
-					doc.phone = data.phone;
-					doc.email = data.email;
-					doc.type = data.type;
-
-					UserModel.saveUser (doc, (err, d, raw) => {
-						if (err) res.send (response.error (err));
-						else if (d)
-							if (raw) res.send (response.success (raw));
-							else res.send (response.error (d.message));
-						else res.send (response.error ('Unknown response'));
-					});
-
-					// res.send (response.success (doc));
-				}
-				else res.send (response.error ('no user found'))
-			})
-			// User.findOne ({_id: req.params.id}, (err, doc) => {
-			// 	if (err) res.send (eRes ('Server error: '+ err))
-			// 	else if (doc) {
-			// 		doc.username = data.username;
-			// 		doc.password = data.password;
-			// 		doc.phone = data.phone;
-			// 		doc.email = data.email;
-			// 		doc.type = data.type;
-
-			// 		doc.save (). then (() => {
-			// 			// mongoose.disconnect ();
-			// 			// UPDATE PASSORT SESSION VALUE HERE
-			// 			req.login (doc, err => {
-			// 				if (err) res.send (eRes ('Error loagging in'));
-			// 				else res.send (sRes ('updated'));
-			// 			});
-			// 		});
-			// 	} else res.send (eRes ('No user found'));
-			// })
+				else if (data) 
+					// data is only sent when success
+					res.send (response.success('updated'));
+				else res.send (response.error ('No data'));
+			});
 		} else res.send (eRes ('no id provided'));
 	} else res.send (eRes ('Data incomplete'));
 });
 
+/**
+ * delete the existing user
+ */
 router.delete ('/delete/:id', (req, res) => {
 	if (req.isAuthenticated()) {
 		if (req.user.doc.type == 'admin') {
 			if (req.params.id) {
-				// mongoose.Promise = es6Promise;
-				// mongoose.connect (config.host, config.db);
-
-				User.remove ({_id: req.params.id}, (err) => {
-					if (err) res.send (eRes ('error deleting: '+ err));
-					else res.send (sRes ('deleted'));
-
-					// mongoose.disconnect ();
+				UserModel.delete(req.params.id, (error, data) => {
+					if (err) res.send (response.error (err));
+					else res.send (response.success('deleted'));
 				});
-			} else res.send (eRes ('Id not sent'));
-		} else res.send (eRes ('You need to be admin'));
-	} else res.send (eRes ('login first'));
+			} else res.send (response.error ('Id not sent'));
+		} else res.send (response.error ('You need to be admin'));
+	} else res.send (response.error ('login first'));
 });
 
+/**
+ * route to add image
+ */
 router.put ('/addImage/:id', (req, res) => {
 	MulterMiddleware (req, res, (err) => {
-        if (err) res.send ({status: 'error', message: 'error uploading: '+ err});
+        if (err) res.send (response.error('error uploading: '+ err));
         else {
-
-            User.findOne ({_id: req.params.id}, (err, data) => {
-                if (err) {
-					res.send ({status: 'error', message: 'Error: '+ err});
-                } else if (data) {
-                    data.image = {
-                        mime: req.image.mimetype.replace ('/', '-'),
-                        value: req.user.doc.username +'_avatar'
-                    }
-
-                    data.save (). then (() => {
-                        res.send ({status: 'success', data: data});
-                    });
-                } else { 
-					res.send ({status: 'error', message: 'no data'});
-				}
-            });
+			/**
+			 * save the image properties in database
+			 */
+			 var imageProperties = {
+				 mimeType: req.image.mimetype,
+				 username: req.user.doc.username
+			 };
+			 UserModel.persistImageProperties (req.params.id, imageProperties, (err, doc) => {
+				 if (err) res.send (response.error (err));
+				 else if (doc) res.send (response.success ('image uploaded'));
+				 else res.send (response.error ('Data not found'));
+			 });
         }
     });
 });

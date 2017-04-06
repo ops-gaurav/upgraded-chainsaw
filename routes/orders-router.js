@@ -1,26 +1,21 @@
 var router = require ('express').Router();
-var mongoose = require ('mongoose');
-var es6Promise = require ('es6-promise').Promise;
 
 import Product from '../models/product_model';
 import Order from '../models/orders_model';
 
+import response from '../utility/response_generator';
 var config = require ('../data/config');
 
+/**
+ * UPDATE THE ORDER MODEL TO CONTAIN THE BUILT IN FUNCTIONS
+ */
 
-router.get ('/', (req, res) => {
-    res.send ({status: 'success', message: 'success'});
-});
 /**
  * order a product
  */
 router.post ('/add/:productId', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.params.productId) {
-
-            // mongoose.Promise = es6Promise;
-            // mongoose.connect (config.host, config.db);
-            
             // check if it is a valid product
             Product.findOne ({_id: req.params.productId}, (err, data) => {
                 if (err) res.send ({status: 'error', message: 'server errror '+ err});
@@ -34,44 +29,34 @@ router.post ('/add/:productId', (req, res) => {
 
                     order.save ().then (() => {
                         res.send ({status: 'success', message: 'Order placed'});
-                        // mongoose.disconnect ();
                     });
                 } else
-                    res.send ({status: 'error', message: 'product not available'});
+                    res.send (response.error('product not available'));
             });
-        } else res.send ({status: 'error', message: 'require product id'});
-    } else res.send ({status: 'error', message: 'Login first'});
+        } else res.send (response.error ('require product id'));
+    } else res.send (response.error ('Login first'));
 });
 
 router.get ('/myorders', (req, res) => {
     if (req.isAuthenticated()) {
-        // mongoose.Promise = es6Promise;
-        // mongoose.connect (config.host, config.db);
-
         console.log (req.user);
         Order.find ({_user: req.user.doc._id}).populate ('_product', '_id name price image').exec ((err, data) => {
             if (err) res.send ({status: 'error', message: err});
             else res.send ({status: 'success', data: data});
-
-            // mongoose.disconnect ();
         });
-    } else res.send ({status: 'error', message: 'please login first to get your order details'});
+    } else res.send (response.error ('Login first'));
 });
 
 router.delete ('/remove/:id', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
             if (req.params.id) {
-                // mongoose.Promise = es6Promise;
-                // mongoose.connect (config.host, config.db);
-
                 Order.remove ({_id: req.params.id}).then (() => {
                     res.send ({status: 'success', message: 'order deleted successfully'});
-                    // mongoose.disconnect ();
                 });
-            } else res.send ({status:'error', message: 'require order id to delete as params'});
-        } else res.send ({status: 'error', message: 'Unauthorized access'});
-    } else res.send ({status:'error', message: 'Login first'});
+            } else res.send (response.error ('require order id to delete as params'));
+        } else res.send (response.error ('Unauthorized access'));
+    } else res.send (response.error ('Login first'));
 });
 
 router.get ('/all', (req, res) => {
@@ -81,7 +66,7 @@ router.get ('/all', (req, res) => {
             else if (doc && doc.length > 0) res.send ({status: 'success', data: doc});
             else res.send ({status: 'error', message: 'No data'});
         });
-    } else res.send ({status: 'error', message: 'Login first'});
+    } else res.send (response.error ('Login first'));
 });
 
 /**
@@ -91,33 +76,25 @@ router.get ('/all', (req, res) => {
 router.get ('/populate', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
-            // mongoose.Promise = es6Promise;
-            // mongoose.connect (config.host, config.db);
 
             Order.find ({}).populate('_user', 'phone username email').populate ('_product', "name price").exec ((err, data) => {
                 if (err) res.send ({status: 'error',message: err});
                 else res.send (data);
                 
-                // mongoose.disconnect ();
             });
-        } else res.send ({status: 'error', message: 'Unauthorized access'});
-    } else res.send ({status: 'error', message: 'Login first'});
+        } else res.send (response.error ('Unauthorized access'));
+    } else res.send (response.error ('Login first'));
 });
 
 router.get ('/multiPopulate', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
-            // mongoose.Promise = es6Promise;
-            // mongoose.connect (config.host, config.db);
-
             Order.find ({}).populate ('_user').populate('_product').exec ((err, data) => {
                 if (err) res.send ({status:'error', message: 'server error: '+ err});
                 else res.send (data);
-
-                // mongoose.disconnect ();
             });
-        } else res.send ({status: 'error', message: 'Unauthorized access'});
-    } else res.send ({status: 'error', message: 'Login first'});
+        } else res.send (response.error ('Unauthorized access'));
+    } else res.send (response.error ('Login first'));
 });
 
 module.exports = router;

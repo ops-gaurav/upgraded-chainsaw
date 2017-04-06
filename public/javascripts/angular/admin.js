@@ -398,7 +398,7 @@ app.controller ('ProductsListController', ['$scope',
 		console.log ('fetching products');
 		$http.get ('/product/all').then (function(d){
 			if (d.data.status == 'success') {
-				$scope.rawData = d.data.data;
+				$scope.rawData = d.data.message;
 				$scope.products = $scope.rawData;
 
 				$scope.fetchPage (1);
@@ -740,7 +740,7 @@ app.controller ('AdminController', ['$rootScope', '$http', '$window', '$state', 
 	$rootScope.productsCount = function () {
 		$http.get ('/product/all'). then (function (d){
 			if (d.data.status == 'success')
-				$rootScope.totalProducts = d.data.data.length;
+				$rootScope.totalProducts = d.data.message.length;
 			else if (d.data.status == 'error')
 				$rootScope.totalUsers = 0;
 		}, function (d) {
