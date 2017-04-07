@@ -72,7 +72,7 @@ router.get ('/usernameLookup/:username', (req, res) => {
 			else res.send (response.error ('username not found'));
 		});
 	}
-	else res.send (eRes ('no username provided'));
+	else res.send (response.error ('no username provided'));
 })
 
 /**
@@ -89,8 +89,8 @@ router.put ('/update/:id', (req, res) => {
 					res.send (response.success('updated'));
 				else res.send (response.error ('No data'));
 			});
-		} else res.send (eRes ('no id provided'));
-	} else res.send (eRes ('Data incomplete'));
+		} else res.send (response.error ('no id provided'));
+	} else res.send (response.error ('Data incomplete'));
 });
 
 /**
