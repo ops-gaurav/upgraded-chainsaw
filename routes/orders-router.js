@@ -1,7 +1,9 @@
 var router = require ('express').Router();
 
 import Product from '../models/product_model';
-import Order from '../models/orders_model';
+import OrderModel from '../models/orders_model';
+
+let Order = OrderModel.order;
 
 import response from '../utility/response_generator';
 var config = require ('../data/config');
@@ -17,21 +19,10 @@ router.post ('/add/:productId', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.params.productId) {
             // check if it is a valid product
-            Product.findOne ({_id: req.params.productId}, (err, data) => {
-                if (err) res.send ({status: 'error', message: 'server errror '+ err});
-                else if (data) {
-                    // product is a valid product
-                    var order = new Order ({
-                        _user: req.user.doc._id,
-                        _product: req.params.productId,
-                        time: new Date().getTime()
-                    });
-
-                    order.save ().then (() => {
-                        res.send ({status: 'success', message: 'Order placed'});
-                    });
-                } else
-                    res.send (response.error('product not available'));
+            OrderModel.orderProduct ({userid: req.user.doc._id, productId: req.params.productId}, (err, data) => {
+                if (err) res.send (response.error (err));
+                else if (data) res.send (response.success ('Order places'));
+                else res.send (response.error ('data not found'));
             });
         } else res.send (response.error ('require product id'));
     } else res.send (response.error ('Login first'));
@@ -39,10 +30,10 @@ router.post ('/add/:productId', (req, res) => {
 
 router.get ('/myorders', (req, res) => {
     if (req.isAuthenticated()) {
-        console.log (req.user);
-        Order.find ({_user: req.user.doc._id}).populate ('_product', '_id name price image').exec ((err, data) => {
-            if (err) res.send ({status: 'error', message: err});
-            else res.send ({status: 'success', data: data});
+        OrderModel.userOrders (req.user.doc._id, (err, data) => {
+            if (err) res.send (response.error (err));
+            else if(data) res.send (response.success (data));
+            else res.send (response.error ('No data'));
         });
     } else res.send (response.error ('Login first'));
 });
@@ -61,10 +52,10 @@ router.delete ('/remove/:id', (req, res) => {
 
 router.get ('/all', (req, res) => {
     if (req.isAuthenticated ()){
-        Order.find ({}, (err, doc) => {
-            if (err) res.send ({status: 'error', message: 'error: '+ error});
-            else if (doc && doc.length > 0) res.send ({status: 'success', data: doc});
-            else res.send ({status: 'error', message: 'No data'});
+        OrderModel.orders ((err, data) => {
+            if (err) res.send (response.error (err));
+            else if (data) res.send (response.success (data));
+            else res.send (response.success ('No data'));
         });
     } else res.send (response.error ('Login first'));
 });
@@ -77,10 +68,10 @@ router.get ('/populate', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
 
-            Order.find ({}).populate('_user', 'phone username email').populate ('_product', "name price").exec ((err, data) => {
-                if (err) res.send ({status: 'error',message: err});
-                else res.send (data);
-                
+            OrderModel.allOrders ((err, data) => {
+                if (err) res.send (response.error (err));
+                else if (data) res.send (response.success (data));
+                else res.send (response.error (data));
             });
         } else res.send (response.error ('Unauthorized access'));
     } else res.send (response.error ('Login first'));
@@ -89,9 +80,10 @@ router.get ('/populate', (req, res) => {
 router.get ('/multiPopulate', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.doc.type == 'admin') {
-            Order.find ({}).populate ('_user').populate('_product').exec ((err, data) => {
-                if (err) res.send ({status:'error', message: 'server error: '+ err});
-                else res.send (data);
+            OrderModel.completeOrders((err, data) => {
+                if (err) res.send (response.error (err));
+                else if (data) res.send (response.success (data));
+                else res.send (response.error ('no data'));
             });
         } else res.send (response.error ('Unauthorized access'));
     } else res.send (response.error ('Login first'));

@@ -27,6 +27,8 @@ module.exports.allProducts = function (next) {
     });
 }
 
+
+
 /**
  * fetch the product by id
  */

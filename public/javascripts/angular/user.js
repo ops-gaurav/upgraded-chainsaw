@@ -78,7 +78,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
         $scope.selectedFilter = "All";
         $http.get ('/product/all').then (function(d){
             if (d.data.status == 'success'){
-                $scope.rawData = d.data.data;
+                $scope.rawData = d.data.message;
                 $scope.auxData = $scope.rawData;
                 // represents the display data
                 $scope.products = $scope.rawData;
@@ -193,7 +193,7 @@ app.controller ('OrdersListController', ['$filter', '$scope', '$rootScope', '$ht
     $scope.fetchOrders = function () {
         $http.get ('/order/myorders').then (function (data){
             if (data.data.status == 'success' ) {
-                $scope.orders = data.data.data;
+                $scope.orders = data.data.message;
                 $scope.rawData = $scope.orders;
                 $scope.auxData = $scope.rawData;
                 //console.log ('orders: '+ JSON.stringify($scope.orders));
@@ -242,9 +242,6 @@ app.controller ('OrdersListController', ['$filter', '$scope', '$rootScope', '$ht
 					return b.time - a.time;
 				});
 				break;
-			// case 5:
-			// 	console.log ('sorting by username');
-			// 	break;
 			default:
 				$scope.auxData = $scope.rawData;
 		}

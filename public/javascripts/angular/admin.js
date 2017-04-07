@@ -70,8 +70,10 @@ app.controller ('OrdersListController', ['$scope', '$rootScope', '$http', 'Pagin
 	}
 
 	$http.get ('/order/multiPopulate').then (function (data) {
-		var response = data.data;
+		var response = data.data.message;
 		$scope.orders = response;
+
+		// console.log (response);
 
 		$scope.rawData = $scope.orders
 		$scope.auxData = $scope.rawData;
@@ -753,7 +755,7 @@ app.controller ('AdminController', ['$rootScope', '$http', '$window', '$state', 
 	$rootScope.ordersCount = function () {
 		$http.get ('/order/all'). then (function (d){
 			if (d.data.status == 'success')
-				$rootScope.totalOrders = d.data.data.length;
+				$rootScope.totalOrders = d.data.message.length;
 			else if (d.data.status == 'error')
 				$rootScope.totalUsers = 0;
 		}, function (d) {
