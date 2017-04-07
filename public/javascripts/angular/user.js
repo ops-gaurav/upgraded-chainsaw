@@ -247,26 +247,26 @@ app.controller ('OrdersListController', ['$filter', '$scope', '$rootScope', '$ht
 		}
 
         $scope.filterDate = function () {
-		if ($scope.date_from && $scope.date_to) {
-			var startDate = $scope.date_from;
-			var endDate = $scope.date_to;
+            if ($scope.date_from && $scope.date_to) {
+                var startDate = $scope.date_from;
+                var endDate = $scope.date_to;
 
 
-			$scope.auxData = [];
+                $scope.auxData = [];
 
-			$.each ($scope.rawData, function (index, order) {
+                $.each ($scope.rawData, function (index, order) {
 
-				var orderDate = new Date (order.time);
+                    var orderDate = new Date (order.time);
 
-				if (orderDate >= startDate && orderDate <= endDate) {
-					$scope.auxData.push (order);
-					console.log ('push');
-				}
-			});
+                    if (orderDate >= startDate && orderDate <= endDate) {
+                        $scope.auxData.push (order);
+                        console.log ('push');
+                    }
+                });
 
-			$scope.fetchPage (1);
-		}
-    }
+                $scope.fetchPage (1);
+            }
+        }
 
 		$scope.fetchPage (1);
 	}
