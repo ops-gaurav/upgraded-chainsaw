@@ -4,7 +4,7 @@
  */
 
 import express from 'express';
-import CategoryModel from '../models/cateory_model';
+import CategoryModel from '../models/category_model';
 import response from '../utility/response_generator';
 
 var exports = module.exports = {};

@@ -1,7 +1,10 @@
 import express from 'express';
-import Category from '../models/cateory_model';
+import Category from '../models/category_model';
+import controller from '../controllers/category_controllers';
 
 var router = express.Router();
+
+router.get ('/allCategories', controller.all);
 
 // get all categories
 router.get ('/all', (req, res) => {
