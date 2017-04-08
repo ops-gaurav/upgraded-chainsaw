@@ -6,7 +6,7 @@ import OrderModel from '../models/orders_model';
 let Order = OrderModel.order;
 
 import response from '../utility/response_generator';
-var config = require ('../data/config');
+import config from '../config/config';
 
 /**
  * UPDATE THE ORDER MODEL TO CONTAIN THE BUILT IN FUNCTIONS

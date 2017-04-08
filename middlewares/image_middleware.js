@@ -1,6 +1,6 @@
 import multer from 'multer';
 import path from 'path';
-import config from '../data/config';
+import config from '../config/config';
 
 var storage = multer.diskStorage ({
 	destination: (req, res, next) => {

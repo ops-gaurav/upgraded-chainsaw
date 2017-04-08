@@ -10,11 +10,11 @@ import sassMiddleware from 'node-sass-middleware';
 import passport from 'passport';
 import flash from 'connect-flash';
 
-import index from './controllers/index';
-import user from './controllers/user-router';
-import order from './controllers/orders-router';
-import product from './controllers/products-router';
-import category from './controllers/category_router';
+import index from './routes/index';
+import user from './routes/user_router';
+import order from './routes/orders_router';
+import product from './routes/products_router';
+import category from './routes/category_router';
 
 const app = express();
 const debug = Debug('shop:app');

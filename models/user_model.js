@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import config from '../data/config'
+import config from '../config/config'
 import pr from 'es6-promise';
 
 var es6Promise = pr.Promise;

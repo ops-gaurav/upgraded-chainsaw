@@ -1,9 +1,9 @@
 import express from 'express';
 import UserModel from '../models/user_model';
-import config from '../data/config';
+import config from '../config/config';
 import fs from 'fs';
-import passport from '../middlewares/passport_auth';
-import MulterMiddleware from'../middlewares/multer_middleware'
+import AuthMiddleware from '../middlewares/auth_middleware';
+import ImageMiddleware from'../middlewares/image_middleware';
 import response from '../utility/response_generator';
 
 let User = UserModel.user;
@@ -39,7 +39,7 @@ router.get ('/logout', (req, res) => {
 	req.logout();
 	res.end ();
 });
-router.post ('/auth', passport.authenticate ('PasswordAuth', {
+router.post ('/auth', AuthMiddleware.authenticate ('PasswordAuth', {
 	failureFlash : 'error authenticating',
 	successFlash : 'success authenticating'
 }), (req, res) => {
@@ -113,7 +113,7 @@ router.delete ('/delete/:id', (req, res) => {
  * route to add image
  */
 router.put ('/addImage/:id', (req, res) => {
-	MulterMiddleware (req, res, (err) => {
+	ImageMiddleware (req, res, (err) => {
         if (err) res.send (response.error('error uploading: '+ err));
         else {
 			/**

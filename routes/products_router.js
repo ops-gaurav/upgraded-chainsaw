@@ -2,8 +2,7 @@ var router = require ('express').Router();
 import fs from 'fs';
 
 import ProductModel from '../models/product_model';
-import config from '../data/config';
-import MulterMiddleware from '../middlewares/multer_middleware';
+import ImageMiddleware from '../middlewares/image_middleware';
 import response from '../utility/response_generator';
 
 const Product = ProductModel.product;
@@ -84,8 +83,16 @@ router.put ('/addImage/:id', (req, res) => {
 });
 
 router.get ('/image/:id/:mime', (req, res) => {
-    res.contentType (req.params.mime.replace ('-', '/'));
-    var image = fs.readFileSync (__dirname +'/../tempUploads/'+ req.params.id);
+    var image = undefined;
+    try {
+        image = fs.readFileSync (__dirname +'/../tempUploads/'+ req.params.id);
+        res.contentType (req.params.mime.replace ('-', '/'));
+    } catch (e) {
+        if (e.code === 'ENOENT') {
+            image = fs.readFileSync (__dirname + '../public/images/profile.png');
+            res.contentType ('image/png');
+        }
+    }
     res.end (image, 'binary');
 });
 
