@@ -10,13 +10,6 @@ let User = UserModel.user;
 
 let router = express.Router();
 
-function sRes (message) {
-	return {status: 'success', message: message};
-}
-function eRes (message) {
-	return {status: 'error', message: message};
-}
-
 router.get ('/all', (req, res) => {
 	if (req.isAuthenticated ()) {
 		UserModel.allUsers ( (err, doc) => {

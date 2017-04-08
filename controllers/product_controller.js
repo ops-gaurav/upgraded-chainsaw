@@ -17,7 +17,7 @@ var exports = module.exports = {};
 /**
  * a middleware controller to get all products
  */
-exports.getAll = function (req, res, next) {
+exports.getAll =  (req, res, next) => {
     ProductModel.allProducts ((err, data) => {
         if (err) {
             res,send (response.error (err));
@@ -31,7 +31,7 @@ exports.getAll = function (req, res, next) {
     });
 }
 
-exports.getById = function (req, res, next) {
+exports.getById = (req, res, next) => {
     ProductModel.getById (req.params.id, (err, doc) => {
         if (err) {
             res.send (response.error (err));
@@ -46,7 +46,7 @@ exports.getById = function (req, res, next) {
 /**
  * add a new product in the database
  */
-exports.addNewProduct = function (req, res, next) {
+exports.addNewProduct = (req, res, next)  => {
     if (req.body) {
         if (req.user.doc.type == 'admin') {
             if (req.body.name && req.body.price) {
@@ -73,7 +73,7 @@ exports.addNewProduct = function (req, res, next) {
 /**
  * upload image controller
  */
-exports.addImage = function (req, res, next) {
+exports.addImage = (req, res, next) => {
     ImageUploader (req, res, (err) => {
         if (err) {
             res.send (response.error (err));
@@ -98,7 +98,7 @@ exports.addImage = function (req, res, next) {
 }
 
 // getting the image
-exports.getImage = function (req, res, next) {
+exports.getImage = (req, res, next) => {
    var image = undefined;
     try {
         image = fs.readFileSync (__dirname +'/../tempUploads/'+ req.params.id);
@@ -114,7 +114,7 @@ exports.getImage = function (req, res, next) {
 
 // UPDATE an existing user
 //
-exports.updateUser = function (req, res, next) {
+exports.updateUser = (req, res, next) => {
     if (req.user.doc.type == 'admin') {
         if (req.body.name && req.body.price && req.body.category) {
             
@@ -146,7 +146,7 @@ exports.updateUser = function (req, res, next) {
 /**
  * deleting a product from database
  */
-exports.deleteProduct =  function (req, res, next) {
+exports.deleteProduct =   (req, res, next) => {
     if (req.user.doc.type =='admin') {
         if (req.params.id) {
             ProductModel.removeProduct (req.params.id, (err, doc) => {

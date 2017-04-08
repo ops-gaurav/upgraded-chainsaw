@@ -9,10 +9,6 @@ import response from '../utility/response_generator';
 import config from '../config/config';
 
 /**
- * UPDATE THE ORDER MODEL TO CONTAIN THE BUILT IN FUNCTIONS
- */
-
-/**
  * order a product
  */
 router.post ('/add/:productId', (req, res) => {
