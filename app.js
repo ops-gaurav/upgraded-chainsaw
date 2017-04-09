@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({
 app.use (expressSession ({secret: 'winteriscoming', resave: false, saveUninitialized: true, cookie: {maxAge: 1000000000000}}));
 app.use(cookieParser());
 
-app.use ( passport.initialize() );
+app.use ( passport.initialize());
 app.use ( passport.session() );
 app.use (flash ());
 
