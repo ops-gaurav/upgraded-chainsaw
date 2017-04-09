@@ -4,7 +4,8 @@
  * @description contains controller middle-wares for user routes
  */
 
-import ImageMiddleware from '../middlewares/image_middleware';
+import fs from 'fs';
+import ImageMiddleware from '../services/image_middleware';
 import response from '../utility/response_generator';
 import UserModel from '../models/user_model';
 
@@ -135,7 +136,7 @@ exports.deleteUser = function (req, res, next) {
  * middleware to add a product image
  * @param {object} image as req.image multipart form data
  */
-exports.addProductImage = (req, res, next) => {
+exports.addUserImage = (req, res, next) => {
     ImageMiddleware (req, res, (err) => {
         if (err) res.send (response.error('error uploading: '+ err));
         else {
@@ -151,4 +152,21 @@ exports.addProductImage = (req, res, next) => {
 			 });
         }
     });
+}
+
+// get the image of the user
+exports.getUserImage = (req, res, next) => {
+    var image = undefined;
+    // var image = fs.readFileSync (__dirname +'/../tempUploads/'+ req.params.id);
+    // res.contentType (req.params.mime.replace ('-', '/'));
+    try {
+        image = fs.readFileSync (__dirname +'/../tempUploads/'+ req.params.id);
+        res.contentType (req.params.mime.replace ('-', '/'));
+    } catch (e) {
+        if (e.code === 'ENOENT') {
+            image = fs.readFileSync (__dirname + '../public/images/profile.png');
+            res.contentType ('image/png');
+        }
+    }
+    res.end (image, 'binary');
 }

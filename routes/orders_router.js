@@ -1,88 +1,33 @@
+/**
+ * @description routes related to the orders
+ * @author gaurav sharma
+ */
 var router = require ('express').Router();
 
-import Product from '../models/product_model';
-import OrderModel from '../models/orders_model';
-
-let Order = OrderModel.order;
-
-import response from '../utility/response_generator';
-import config from '../config/config';
-
+import sessionAuth from '../controllers/session_auth_controller';
+import controller from '../controllers/orders_controller';
 /**
  * order a product
  */
-router.post ('/add/:productId', (req, res) => {
-    if (req.isAuthenticated()) {
-        if (req.params.productId) {
-            // check if it is a valid product
-            OrderModel.orderProduct ({userid: req.user.doc._id, productId: req.params.productId}, (err, data) => {
-                if (err) res.send (response.error (err));
-                else if (data) res.send (response.success ('Order places'));
-                else res.send (response.error ('data not found'));
-            });
-        } else res.send (response.error ('require product id'));
-    } else res.send (response.error ('Login first'));
-});
+router.post ('/add/:productId', sessionAuth.userAuthenticated, controller.orderProduct);
 
-router.get ('/myorders', (req, res) => {
-    if (req.isAuthenticated()) {
-        OrderModel.userOrders (req.user.doc._id, (err, data) => {
-            if (err) res.send (response.error (err));
-            else if(data) res.send (response.success (data));
-            else res.send (response.error ('No data'));
-        });
-    } else res.send (response.error ('Login first'));
-});
+// listing the orders of user in session
+router.get ('/myorders', sessionAuth.userAuthenticated, controller.listUserOrders);
 
-router.delete ('/remove/:id', (req, res) => {
-    if (req.isAuthenticated()) {
-        if (req.user.doc.type == 'admin') {
-            if (req.params.id) {
-                Order.remove ({_id: req.params.id}).then (() => {
-                    res.send ({status: 'success', message: 'order deleted successfully'});
-                });
-            } else res.send (response.error ('require order id to delete as params'));
-        } else res.send (response.error ('Unauthorized access'));
-    } else res.send (response.error ('Login first'));
-});
+// removing the user based on the id
+// require admin access to call
+router.get ('/remove/:id', sessionAuth.adminAuthenticated, controller.removeOrder);
 
-router.get ('/all', (req, res) => {
-    if (req.isAuthenticated ()){
-        OrderModel.orders ((err, data) => {
-            if (err) res.send (response.error (err));
-            else if (data) res.send (response.success (data));
-            else res.send (response.success ('No data'));
-        });
-    } else res.send (response.error ('Login first'));
-});
+// get all orders
+// UN-POPULATED
+router.get ('/all', sessionAuth.userAuthenticated, controller.getAllOrders);
 
 /**
  * get all the orders in the database
  * for admin only
  */
-router.get ('/populate', (req, res) => {
-    if (req.isAuthenticated()) {
-        if (req.user.doc.type == 'admin') {
+router.get ('/populate', sessionAuth.userAuthenticated, controller.getUserPopulatedOrders);
 
-            OrderModel.allOrders ((err, data) => {
-                if (err) res.send (response.error (err));
-                else if (data) res.send (response.success (data));
-                else res.send (response.error (data));
-            });
-        } else res.send (response.error ('Unauthorized access'));
-    } else res.send (response.error ('Login first'));
-});
-
-router.get ('/multiPopulate', (req, res) => {
-    if (req.isAuthenticated()) {
-        if (req.user.doc.type == 'admin') {
-            OrderModel.completeOrders((err, data) => {
-                if (err) res.send (response.error (err));
-                else if (data) res.send (response.success (data));
-                else res.send (response.error ('no data'));
-            });
-        } else res.send (response.error ('Unauthorized access'));
-    } else res.send (response.error ('Login first'));
-});
+router.get ('/multiPopulate', sessionAuth.adminAuthenticated, controller.getPopulatedResult);
 
 module.exports = router;

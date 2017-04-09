@@ -38,7 +38,7 @@ angular
 				})
 				.state ('category-new', {
 					url: '/admin/categories/createnew',
-					templateUrl: '/admin/category/new-category-temkplate.html',
+					templateUrl: '/admin/category/new-category-template.html',
 					controller: 'NewCategoryController'
 				})
 				.state ('product-new', {
@@ -60,7 +60,7 @@ angular
 		'$http', 
 		'$log',
 		'PaginationService', 
-		function ($scope, $rootScope, $http, PaginationService){
+		function ($scope, $rootScope, $http, $log, PaginationService){
 			// load all the orders here
 
 			$scope.orders = [];
@@ -165,7 +165,7 @@ angular
 		'$rootScope', 
 		'$http', 
 		'$log',
-		'PaginationService', function ($scope, $rootScope, $http, PaginationService) {
+		'PaginationService', function ($scope, $rootScope, $http, $log, PaginationService) {
 			// load alll the users here
 			$scope.title = 'All users';
 
@@ -377,7 +377,7 @@ angular
 		'$http', 
 		'$log',
 		'Upload',
-		'PaginationService', function ($scope, $rootScope, $http, Upload, PaginationService) {
+		'PaginationService', function ($scope, $rootScope, $http, $log , Upload, PaginationService) {
 			$scope.title = 'All products';
 			// $scope.productCategories = [ 'Accessory', 'Electronics' , 'Art', 'Sports'];
 			$scope.productCategories = [];
@@ -625,7 +625,7 @@ angular
 		'$scope', 
 		'$http', 
 		'$log',
-		'$state', function ($scope, $http, $state) {
+		'$state', function ($scope, $http, $log , $state) {
 			$scope.title = 'Shopping Categories';
 
 			$http.get ('/category/all'). then (function (d) {
@@ -711,7 +711,7 @@ angular
 		'$scope', 
 		'$http', 
 		'$log',
-		'$state', function ($scope, $http, $state) {
+		'$state', function ($scope, $http,$log , $state) {
 			$scope.title = 'Create new shopping category';
 
 			$scope.lookupCategoryValidity = function () {
@@ -727,6 +727,7 @@ angular
 			}
 
 			$scope.createNewCategory = function (){
+				// $log.log ($scope.category);
 				$http.post ('/category/add/'+ $scope.category).then (function (d) {
 					if (d.data.status == 'success')
 						$state.transitionTo ('categories');
@@ -745,7 +746,7 @@ angular
 		'$http', 
 		'$log',
 		'$window', 
-		'$state', function ($rootScope, $http, $window, $state) {
+		'$state', function ($rootScope, $http, $log, $window, $state) {
 			$http.get ('/user/sessioninfo'). then (function (data) {
 				var response = data.data;
 				if (response.status == 'success') {

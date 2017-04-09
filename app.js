@@ -41,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use (express.static (path.join (__dirname, 'bower_components')));
 // path to angular templates
 app.use (express.static (path.join (__dirname, 'public/javascripts/angular/templates')));
+app.use (express.static (path.join (__dirname +'views')));
 
 app.use ('/', index);
 app.use ('/user', user);

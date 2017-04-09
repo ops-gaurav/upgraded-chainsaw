@@ -1,25 +1,20 @@
 import express from 'express';
-import path from 'path';
-import resolver from './util/resolver';
-
+import resolver from '../utility/resolver';
+import sessionAuth from '../controllers/session_auth_controller';
+import constants from '../config/constants';
 const router = express.Router();
 
 /* GET index page. */
 router.get('/', (req, res, next) => {
-  res.sendFile (resolver.htmlResolver.resolve('index.html'));
+  res.sendFile (constants.getFile ('index.html'));
 });
 
-router.get ('/admin', (req, res) => {
-  if (req.isAuthenticated () && req.user.doc.type == 'admin') {
-    res.sendFile (resolver.htmlResolver.resolve('admin.html'));
-  } else res.render ('error', {message: 'Unauthorized access'});
+router.get ('/admin', sessionAuth.adminAuthenticated, (req, res) => {
+    res.sendFile (constants.getFile('admin.html'));
 });
 
-router.get ('/user', (req, res) => {
-  if (req.isAuthenticated ()  && req.user.doc.type == 'user')
-    res.sendFile (resolver.htmlResolver.resolve ('user.html'));
-  else
-    res.render ('error', {message: 'Unauthorized access'});
+router.get ('/user', sessionAuth.userAuthenticated, (req, res) => {
+    res.sendFile (constants.getFile ('user.html'));
 })
 
 export default router;

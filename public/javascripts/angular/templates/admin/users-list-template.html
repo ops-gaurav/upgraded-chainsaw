@@ -72,7 +72,7 @@
 					<li ng-class='{disabled: pages.currentPage == 1}' ng-click='fetchPage (1)'>
 						<a href="#">&laquo;First</a>
 					</li>
-					<li data-ng-repeat="page in pages.pages" ng-class='{active: pages.currentPage == page' ng-click='fetchPage (page)'>
+					<li data-ng-repeat="page in pages.pages" ng-class='{active: pages.currentPage == page}' ng-click='fetchPage (page)'>
 						<a href="#">{{page}}</a>
 					</li>
 					<li ng-class='{disabled: pages.currentPage == pages.totalPages}'  ng-click='fetchPage (page)'>

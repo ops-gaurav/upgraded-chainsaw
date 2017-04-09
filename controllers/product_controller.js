@@ -9,7 +9,7 @@
 import fs from 'fs';
 
 import ProductModel from '../models/product_model';
-import ImageUploader from '../middlewares/image_middleware';
+import ImageUploader from '../services/image_middleware';
 import response from '../utility/response_generator';
 
 var exports = module.exports = {};

@@ -31,15 +31,16 @@ module.exports.allCategories = (next) => {
  * @param {string} category represents category name
  * @param {function} next represents callback
  */
-module.exports.addCategory = (category, next) => {
-    Category.findOne ({name: category}, (err, doc) => {
+module.exports.addCategory = (name, next) => {
+    Category.findOne ({name: name}, (err, doc) => {
         if (err) {
             next (err, undefined);
         } else if (doc) {
             next ('Category already exists', undefined);
         } else {
+            console.log (category);
             var category = new Category ({
-                name: category
+                name: name
             });
 
             category.save(). then (() => {
