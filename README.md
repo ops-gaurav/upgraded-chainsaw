@@ -21,4 +21,5 @@ using the following json file.<br/>
 *Make sure have your `mongod` process running*
 
 ### Developer
-* Use `gulp scripts` to minify the javascript files.
+* Install dev dependencies using `npm install --dev`.
+* Use `gulp scripts` to minify and concat the angularJS files.

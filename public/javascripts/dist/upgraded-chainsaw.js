@@ -916,6 +916,7 @@
 			'$scope',
 			'$window',
 			'$http',
+			'$log',
 			loginController
 		])
 		.controller ('SignupController', [
@@ -925,26 +926,28 @@
 			signupController
 		])
 
-	function loginController ($scope, $window, $http) {
+	function loginController ($scope, $window, $http, $log) {
 		$scope.username = 'gaurav';
 		$scope.password = '2202319';
 		$scope._processAuth = function () {
+
+			$log.log ('authenticate');
 			if (!$scope.username || !$scope.password) {
 				$scope.auth_error = 'Required username and password';
 			} else {
-				$scope.auth_error = 'Username or password error';
 				$http.post ('/user/auth', {username: $scope.username, password: $scope.password}). then (function (data) {
 					var response = data.data;
 					if (response.status == 'success') {
 						$window.location = response.message.redirect;
-						console.log ('redirect to '+ response.message.redirect);
+						$log.log ('redirect to '+ response.message.redirect);
 					} else
-						console.log (response.message);
+						$log.log (response.message);
 				}, function (data) {
+					$log.error (data.status);
 					if (data.status == 401)
 						$scope.auth_error = 'Username or password error';
 					else
-						console.log (JSON.stringify(data));
+						$log.log (JSON.stringify(data));
 				});
 			}
 		}

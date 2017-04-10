@@ -15,10 +15,7 @@ router.get ('/sessioninfo', sessionAuth.userAuthenticated, controller.sessionInf
 
 router.get ('/logout', sessionAuth.userAuthenticated, controller.logout);
 
-router.post ('/auth', AuthMiddleware.authenticate ('PasswordAuth', {
-	failureFlash: 'error authenticating',
-	successFlash: 'success authenticating'
-}), controller.authenticate);
+router.post ('/auth', AuthMiddleware.authenticateUser);
 
 /**
  *  create a new user

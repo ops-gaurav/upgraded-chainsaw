@@ -2,6 +2,7 @@ import express from 'express';
 import resolver from '../utility/resolver';
 import sessionAuth from '../controllers/session_auth_controller';
 import constants from '../config/constants';
+
 const router = express.Router();
 
 /* GET index page. */
