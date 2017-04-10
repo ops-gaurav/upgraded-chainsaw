@@ -16,7 +16,9 @@ using the following json file.<br/>
 * Go into the project directory `cd upgraded-chainsaw`.
 * Make sure your `mongod` process is running.
 * import the database using the following command <br/>
-`mongoimport -d shop -c users admin.json`
-* The admin is available with _admin_ username and _admin_ password.
+`mongorestore --archive < db_dump`
 
 *Make sure have your `mongod` process running*
+
+### Developer
+* Use `gulp scripts` to minify the javascript files.
