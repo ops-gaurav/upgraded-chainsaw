@@ -170,7 +170,7 @@ app.controller ('ProductsListController', ['$scope', '$rootScope', '$http', '$lo
     }
 }]);
 
-app.controller ('OrdersListController', ['$filter', '$scope', '$rootScope', '$http' , 'PaginationService' , function ($filter, $scope, $rootScope, $http, PaginationService) {
+app.controller ('OrdersListController', ['$scope', '$rootScope', '$http' , 'PaginationService' , function ($filter, $scope, $rootScope, $http, PaginationService) {
     $scope.pageTitle = 'Your recent orders';
     $scope.rawData = [];
 
