@@ -13,7 +13,7 @@ sample project of a dummy shopping website.
 ### Database data
 You'll also need an admin for a website. You can import admin
 using the following json file.<br/>
-* Go into the project directory `cd upgraded-chansaw`.
+* Go into the project directory `cd upgraded-chainsaw`.
 * Make sure your `mongod` process is running.
 * import the database using the following command <br/>
 `mongoimport -d shop -c users admin.json`
