@@ -1,9 +1,27 @@
 import passport from 'passport';
+import PassJWT from 'passport-jwt';
+
 import User from '../models/user_model';
 import LocalStrategy from 'passport-local';
 import response from '../utility/response_generator';
 
 const exports = module.exports = {};
+const JwtStrategy = PassJWT.Strategy;
+const ExtractJwt = PassJWT.ExtractJWT;
+
+var options = {};
+options.jwtFromRequest = ExtractJWT.fromAuthHeaer();
+options.secretOrKey = 'winteriscoming';
+
+var strategy = new JwtStrategy (options, function (jwt_payload, next) {
+	console.log ('payload received: '+ jwt_payload);
+
+	User.getByUsername (jwt_payload.username, (err, data) => {
+		if (err) next (err, undefined);
+		else if (data) {
+		}
+	});
+});
 
 passport.use ('PasswordAuth', new LocalStrategy ({
 	usernameField: 'username',
@@ -31,6 +49,7 @@ passport.use ('PasswordAuth', new LocalStrategy ({
 		} else done ('No data', undefined);
 	})
 }));
+
 
 passport.serializeUser ((user, done) => {
     return done (null, user);

@@ -24,7 +24,7 @@ module.exports.allCategories = (next) => {
             next (undefined, undefined);
         }
     });
-}
+};
 
 /**
  * adding a new category
@@ -41,14 +41,14 @@ module.exports.addCategory = (name, next) => {
             console.log (category);
             var category = new Category ({
                 name: name
-            });
+            });babel
 
             category.save(). then (() => {
                 next (undefined, 'Saved');
             });
         }
-    })
-}
+    });
+};
 
 /**
  * updates an existing category
@@ -71,7 +71,7 @@ module.exports.updateCategory = (id, newName, next) => {
             next (undefined, undefined);
         }
     });
-}
+};
 
 /**
  * checks whether the sent category is unique or not
@@ -89,6 +89,6 @@ module.exports.getCategory = (category, next) => {
             next (undefined, undefined);
         }
     });
-}
+};
 
 module.exports.category = Category;

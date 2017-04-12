@@ -72,4 +72,4 @@ exports.getByName = (req, res, next) => {
             res.send (response.error ('Not found'));
         }
     })
-}
+};
