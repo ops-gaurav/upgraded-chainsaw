@@ -1,16 +1,19 @@
 import passport from 'passport';
-import PassJWT from 'passport-jwt';
+import jwt from 'jsonwebtoken';
+
+import passportJWT from 'passport-jwt';
 
 import User from '../models/user_model';
 import LocalStrategy from 'passport-local';
 import response from '../utility/response_generator';
 
 const exports = module.exports = {};
-const JwtStrategy = PassJWT.Strategy;
-const ExtractJwt = PassJWT.ExtractJWT;
+
+const JwtStrategy = passportJWT.Strategy;
+const ExtractJwt = passportJWT.ExtractJWT;
 
 var options = {};
-options.jwtFromRequest = ExtractJWT.fromAuthHeaer();
+options.jwtFromRequest = ExtractJWT.fromAuthHeader();
 options.secretOrKey = 'winteriscoming';
 
 var strategy = new JwtStrategy (options, function (jwt_payload, next) {
@@ -19,9 +22,11 @@ var strategy = new JwtStrategy (options, function (jwt_payload, next) {
 	User.getByUsername (jwt_payload.username, (err, data) => {
 		if (err) next (err, undefined);
 		else if (data) {
+			
 		}
 	});
 });
+
 
 passport.use ('PasswordAuth', new LocalStrategy ({
 	usernameField: 'username',
@@ -75,3 +80,35 @@ exports.authenticateUser = (req, res, next) => {
 		}
 	})(req, res, next);
 };
+
+exports.jwtAuth = (req, res, next) => {
+	if (req.body.username && req.body.password) {
+		User.getByUsername (req.body.username, (err, doc) => {
+			if (err) {
+				res.send (response.error (err));
+			} else if (doc) {
+				// there is some data
+				if (doc.password == req.body.password) {
+					// serialize this information 
+					var payload = {
+						id: doc._id,
+						username: doc.username,
+						email: doc.email,
+						phone: doc.phone,
+						type: doc.type,
+						image: doc.image
+					};
+
+					let token = jwt.sign (payload, options.secretOrKey);
+					res.send (response.success (token));
+				} else {
+					res.send (response.error ('Password did not match'));
+				}
+			} else {
+				res.send (response.error ('No data'));
+			}
+		});
+	} else {
+		res.send (response.error ('Required username and password'));
+	}
+}

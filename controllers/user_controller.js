@@ -5,6 +5,7 @@
  */
 
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
 import ImageMiddleware from '../services/image_middleware';
 import response from '../utility/response_generator';
 import UserModel from '../models/user_model';
@@ -40,6 +41,43 @@ exports.sessionInfo = function (req, res, next) {
 exports.logout = function (req, res, next) {
     req.logout();
     res.end ();
+}
+
+/**
+ * login a user
+ * accepts Username and password
+ * returns Token if authenticated
+ */
+exports.loginAuthenticate = (req, res, next) => {
+    if (req.body.username && req.body.password) {
+		User.getByUsername (req.body.username, (err, doc) => {
+			if (err) {
+				res.send (response.error (err));
+			} else if (doc) {
+				// there is some data
+				if (doc.password == req.body.password) {
+					// serialize this information 
+					var payload = {
+						id: doc._id,
+						username: doc.username,
+						email: doc.email,
+						phone: doc.phone,
+						type: doc.type,
+						image: doc.image
+					};
+
+					let token = jwt.sign (payload, options.secretOrKey);
+					res.send (response.success (token));
+				} else {
+					res.send (response.error ('Password did not match'));
+				}
+			} else {
+				res.send (response.error ('No data'));
+			}
+		});
+	} else {
+		res.send (response.error ('Required username and password'));
+	}
 }
 
 /**
