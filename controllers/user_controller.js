@@ -50,7 +50,7 @@ exports.logout = function (req, res, next) {
  */
 exports.loginAuthenticate = (req, res, next) => {
     if (req.body.username && req.body.password) {
-		User.getByUsername (req.body.username, (err, doc) => {
+		UserModel.getByUsername (req.body.username, (err, doc) => {
 			if (err) {
 				res.send (response.error (err));
 			} else if (doc) {
@@ -66,7 +66,7 @@ exports.loginAuthenticate = (req, res, next) => {
 						image: doc.image
 					};
 
-					let token = jwt.sign (payload, options.secretOrKey);
+					let token = jwt.sign (payload, 'winteriscoming');
 					res.send (response.success (token));
 				} else {
 					res.send (response.error ('Password did not match'));
